@@ -69,7 +69,7 @@ class Entry:
                          self.cursor += 1
                     elif event.key == K_LEFT:
                          self.cursor -= 1
-                    elif event.unicode in " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\-_.éàèù9" and event.unicode != "":
+                    elif event.unicode in " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\-_.éàèù" and event.unicode != "":
                          self.stringValue = self.stringValue[:self.cursor] + event.unicode + self.stringValue[self.cursor:]
                          self.cursor += 1
                
