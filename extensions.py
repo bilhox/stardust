@@ -59,7 +59,7 @@ class Basic_image_processing_package(Package):
      
      def __init__(self , pos : list, size : list , app_reference):
           
-          super().__init__("image_processing_package" , pos , size)
+          super().__init__("Image processing" , pos , size)
           self.app_reference = app_reference
      
      def load(self):

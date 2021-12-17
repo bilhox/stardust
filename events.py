@@ -67,7 +67,7 @@ def pgm_conv(app):
 def pbm_conv(app):
      
      try:
-          image_data = traitement.bitmap_conversion(app.canva_components["toile"].image.image_data)
+          image_data = traitement.bitmap_conversion(app.canva_components["toile"].image.image_data , 250)
           app.canva_components["toile"].image.load_by_data(image_data)
      except:
           pass
