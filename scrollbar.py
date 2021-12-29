@@ -17,6 +17,8 @@ class Scrollbar:
           #y true surface difference
           self.y_ts_diff = 0
           self.change_y = 0
+          
+          self.scrollbar_hid = False
      
      def update(self):
           
@@ -25,6 +27,12 @@ class Scrollbar:
           # panel_true_surface_height
           ptsh = self.panel_ref.true_surface.get_rect().height
           height_diff = ptsh - self.scroll_rect.height
+          
+          if height_diff <= 0:
+               self.scrollbar_hid = True
+               return
+          else:
+               self.scrollbar_hid = False
           
           if self.y_ts_diff > 0:
                self.y_ts_diff = 0
@@ -50,14 +58,15 @@ class Scrollbar:
                self.bar_rect.centery =  scroll_length / (height_diff * 1.0) * (self.y_ts_diff * -1) + bar_half_lenght
      
      def event_handler(self , event):
-           
-          if event.type == MOUSEBUTTONDOWN:
-               if event.button == 1:
-                    if self.bar_rect.collidepoint([event.pos[0]-self.panel_ref.rect.x , event.pos[1]-self.panel_ref.rect.y]):
-                         self.on_bar = True
-                         self.mouse_diff = event.pos[1] - self.bar_rect.top
-          if event.type == MOUSEBUTTONUP:
-               self.on_bar = False
+          
+          if not self.scrollbar_hid: 
+               if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                         if self.bar_rect.collidepoint([event.pos[0]-self.panel_ref.rect.x , event.pos[1]-self.panel_ref.rect.y]):
+                              self.on_bar = True
+                              self.mouse_diff = event.pos[1] - self.bar_rect.top
+               if event.type == MOUSEBUTTONUP:
+                    self.on_bar = False
           
           # if event.type == KEYDOWN:
           #      if event.key == K_UP:
@@ -73,5 +82,8 @@ class Scrollbar:
      
      def draw(self , surface):
           
-          pygame.draw.rect(surface, [150 , 150 , 150], self.scroll_rect)
-          pygame.draw.rect(surface, [50 , 50 , 50], self.bar_rect)
+          if not self.scrollbar_hid:
+               pygame.draw.rect(surface, [150 , 150 , 150], self.scroll_rect)
+               pygame.draw.rect(surface, [50 , 50 , 50], self.bar_rect)
+          else:
+               pygame.draw.rect(surface, [150 , 150 , 150], self.scroll_rect)

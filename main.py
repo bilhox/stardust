@@ -1,9 +1,9 @@
 import pygame
 import sys
 import events
-from components import *
+from ui import *
 from pygame.locals import *
-from extensions import *
+from panel import *
 
 class App():
      
@@ -14,19 +14,8 @@ class App():
           
           self.window_size = window_size
           
-          self.ui_components = {}
-          self.packages = {}
-          self.canva_components = {}
-          self.surface = {}
-          
-          self.tool_surface = pygame.Surface([int(self.window_size[0]*0.3) , int(self.window_size[1]*0.95)])
-          self.tool_surface_rect = self.tool_surface.get_rect()
-          
-          self.canva_surface = pygame.Surface([int(self.window_size[0]*0.7) , int(self.window_size[1]*0.95)])
-          self.canva_surface_rect = self.canva_surface.get_rect()
-          
-          self.settings_surface = pygame.Surface([self.window_size[0] , int(self.window_size[1]*0.05)])
-          self.settings_surface_rect = self.settings_surface.get_rect()
+          self.panels = {}
+          self.ui = {}
           
           self.screen = pygame.display.set_mode(self.window_size)
           pygame.display.set_caption(self.name + " - " + self.version)
@@ -41,76 +30,68 @@ class App():
           
           self.screen.fill([90 , 90 , 90])
           
+          self.panels["Img displayer"] = Img_displayer_panel([300 , 40] , [600 , 380])
+          self.panels["File list"] = File_list([0 , 40],[300 , 380])
           
-          self.tool_surface_rect.x , self.tool_surface_rect.y = [0 , self.window_size[1] - self.tool_surface_rect.height]
-          self.canva_surface_rect.x , self.canva_surface_rect.y = [self.tool_surface_rect.right , self.window_size[1] - self.canva_surface_rect.height]
+          self.ui["entry_img1"] = Entry("entry_img1" , [0 , 0] , [300 , 40])
+          self.ui["button_render"] = Button( [300 , 0],[40 , 40],{"stringvalue":"add","align center":True})
+          self.ui["button_render"].target = events.add_file
           
-          self.canva_components["toile"] = Canva("toile" , [0,0] , self.canva_surface_rect.size)
-          self.canva_components["toile"].image = Image("image" , "" , [0,0])
+          self.ui["button_SymHori"] = Button([10,430] , [200 , 30] , {"stringvalue":"Sym Horiz","align center":True})
+          self.ui["button_SymHori"].target = events.sym_hori
           
-          self.packages["traitement"] = Basic_image_processing_package([0,0],[self.tool_surface_rect.width , 200] , self)
+          self.ui["button_SymVert"] = Button([10,470] , [200 , 30] , {"stringvalue":"Sym Vert","align center":True})
+          self.ui["button_SymVert"].target = events.sym_vert
+
+          self.ui["button_rot180"] = Button([50,510] , [120 , 30] , {"stringvalue":"Rot 180°","align center":True})
+          self.ui["button_rot180"].target = events.rot_180
           
-          self.packages["traitement"].load()
+          self.ui["button_rot90"] = Button([50,550] , [120 , 30] , {"stringvalue":"Rot 90°","align center":True})
+          self.ui["button_rot90"].target = events.rot_90
           
-          self.ui_components["button_reset_img"] = Button("button_resetImg" , [self.tool_surface_rect.width // 2 - 100 , self.tool_surface_rect.height - 40] , [200 , 30] , "reset" , target_arguments=self)
-          self.ui_components["button_reset_img"].target = events.reset_image
+          self.ui["button_convPGM"] = Button([240,430] , [120 , 30] , {"stringvalue":"To PGM","align center":True})
+          self.ui["button_convPGM"].target = events.pgm_conv
           
-          self.file_founded = False
+          self.ui["button_convPBM"] = Button([240,470] , [120 , 30] , {"stringvalue":"To PBM","align center":True})
+          self.ui["button_convPBM"].target = events.pbm_conv  
           
+          self.ui["entry_intConvPBM"] =  Entry("entry_intConvPBM", [240 , 510] , [120 , 30])    
      
      def events(self):
-          events = []
           for event in pygame.event.get():
                if event.type == QUIT:
                     pygame.quit()
-                    sys.exit()
-               events.append(event)
-          
-          for package in self.packages.values():
-               package.events(events , [self.tool_surface_rect.x , self.tool_surface_rect.y])
-          
-          for component in self.ui_components.values():
-               component.events(events , [self.tool_surface_rect.x , self.tool_surface_rect.y])
-          
-          for canva_component in self.canva_components.values():
-               canva_component.events(events , [self.canva_surface_rect.x , self.canva_surface_rect.y])
+                    sys.exit(0)
+               
+               for panel in self.panels.values():
+                    
+                    panel.event_handler(event)
+               
+               for ui in self.ui.values():
+                    ui.event_handler(event)
      
      def Update(self):
           
           self.events()
+          
+          self.panels["File list"].update()
+          
           self.Display()
           pygame.display.flip()
      
      def Display(self):
           
-          self.tool_surface.fill([60 , 60 , 60])
+          self.screen.fill([90,90,90])
           
-          for package in self.packages.values():
-               package.display(self.tool_surface)
+          for panel in self.panels.values():
+               panel.display(self.screen)
           
-          for component in self.ui_components.values():
-               component.display(self.tool_surface)
-          
-          self.screen.blit(self.tool_surface , [0 , self.window_size[1] - self.tool_surface_rect.height])
-          
-          self.canva_surface.fill([30 , 30 , 30])
-               
-          for canva_component in self.canva_components.values():
-               
-               if isinstance(canva_component , Image):
-                    canva_component.display(self.canva_surface , True)
-               else:
-                    canva_component.display(self.canva_surface)
-               
-
-          self.screen.blit(self.canva_surface , [self.tool_surface_rect.right , self.window_size[1] - self.canva_surface_rect.height])
-          
-          self.settings_surface.fill([54, 171, 104])
-          
-          self.screen.blit(self.settings_surface , [0,0])
+          for ui in self.ui.values():
+               ui.display(self.screen)
 
 def main():
-     app = App([1000 , 650])
+     app = App([900 , 600])
+     events.app = app
      app.Start()
 
      while True:

@@ -1,74 +1,94 @@
-
 import pygame
-import components
 import traitement
 
+from ui import *
+from pygame.locals import *
 
-def load_image(app):
-          
-          app.canva_components["toile"].image.path = app.packages["traitement"].components["entry_img1"].stringValue
+app = None
+
+def load_image_test():
+     app.panels["Img displayer"].img_displayer.image.load("./imgs/salva.ppm")
+     
+def add_file():
+     image = Image([0,0])
+     try:
+          image.load(app.ui["entry_img1"].stringValue)
+          height = len(app.panels["File list"].files)
+          selector = Image_selector([0,height * 26],[app.panels["File list"].rect.width - 20 , 26],{"stringvalue":image.name , "padding left":20} , image)
+          selector.target = load_image
+          app.panels["File list"].files.append(selector)
+     except:
+          pass
+
+
+def load_image(image):
+     
+     app.panels["Img displayer"].img_displayer.image = image 
+     app.panels["Img displayer"].img_displayer.resize()
+
+def remove_ffl(selector):
+     
+     index = app.panels["File list"].files.index(selector)
+     app.panels["File list"].files.remove(selector)
+     
+     if app.panels["File list"].files == []:
+          app.panels["Img displayer"].img_displayer.image = Image([0,0])
+     else :
           try:
-               app.canva_components["toile"].image.load()
-               app.canva_components["toile"].resize()
-               app.file_founded = True
-          except FileNotFoundError as error:
-               print(error)
-               app.file_founded = False
-          except pygame.error as pygame_error:
-               print(pygame_error)
-               app.file_founded = False
+               app.panels["Img displayer"].img_displayer.image = app.panels["File list"].files[index].value
+               app.panels["Img displayer"].img_displayer.resize()
+          except:
+               app.panels["Img displayer"].img_displayer.image = app.panels["File list"].files[index - 1].value
+               app.panels["Img displayer"].img_displayer.resize()
 
-def reset_image(app):
-     
-     app.canva_components["toile"].image = components.Image("image" , "" , app.canva_components["toile"].image.pos)
-
-def sym_hori(app):
+def sym_hori():
      
      try:
-          image_data = traitement.symHori(app.canva_components["toile"].image.image_data)
-          app.canva_components["toile"].image.load_by_data(image_data)
+          image_data = traitement.symHori(app.panels["Img displayer"].img_displayer.image.image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
           
 
-def sym_vert(app):
+def sym_vert():
      
      try:
-          image_data = traitement.symVert(app.canva_components["toile"].image.image_data)
-          app.canva_components["toile"].image.load_by_data(image_data)
+          image_data = traitement.symVert(app.panels["Img displayer"].img_displayer.image.image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
 
-def rot_180(app):
+def rot_180():
      
      try:
-          image_data = traitement.rotation180(app.canva_components["toile"].image.image_data)
-          app.canva_components["toile"].image.load_by_data(image_data)
+          image_data = traitement.rotation180(app.panels["Img displayer"].img_displayer.image.image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
           
 
-def rot_90(app):
+def rot_90():
      
      try:
-          image_data = traitement.rotation90(app.canva_components["toile"].image.image_data)
-          app.canva_components["toile"].image.load_by_data(image_data)
+          image_data = traitement.rotation90(app.panels["Img displayer"].img_displayer.image.image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
 
-def pgm_conv(app):
+def pgm_conv():
      
      try:
-          image_data = traitement.conversion_ppm_en_pgm(app.canva_components["toile"].image.image_data)
-          app.canva_components["toile"].image.load_by_data(image_data)
+          image_data = traitement.conversion_ppm_en_pgm(app.panels["Img displayer"].img_displayer.image.image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
 
-def pbm_conv(app):
+def pbm_conv():
      
      try:
-          image_data = traitement.bitmap_conversion(app.canva_components["toile"].image.image_data , 300)
-          app.canva_components["toile"].image.load_by_data(image_data)
+          int_conv = int(app.ui["entry_intConvPBM"].stringValue)
+          image_data = traitement.bitmap_conversion(app.panels["Img displayer"].img_displayer.image.image_data , int_conv)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
 
