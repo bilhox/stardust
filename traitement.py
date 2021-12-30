@@ -1,22 +1,23 @@
 
 def symHori(image_data):
-     """
-     Symétrie axe horizontale
-     :param img : Dict : {"meta" : {"titre" : "titre", ...},
-                         "pix" : [(255, 255, 255), (253, 0, 34), (233, 0, 0), ...]}
-     :return: img
-     """
-     col = image_data["meta"]["col"]
-     lig = image_data["meta"]["lig"]
-     pix = image_data["pix"]
+    """
+    Symétrie axe horizontale
+    :param img : Dict : {"meta" : {"titre" : "titre", ...},
+                        "pix" : [(255, 255, 255), (253, 0, 34), (233, 0, 0), ...]}
+    :return: img
+    """
+    col = image_data["meta"]["col"]
+    lig = image_data["meta"]["lig"]
+    pix = image_data["pix"]
 
-     newpix = []
-     for y in range(lig-1, -1, -1):
-          newpix.append(pix[y])
+    newpix = []
+    for y in range(lig-1, -1, -1):
+        newpix.append(pix[y])
 
-     image_data["pix"] = newpix
-     image_data["meta"]["mod"]="Symétrie horizontale"
-     return image_data
+    final_image_data = image_data.copy()
+    final_image_data["pix"] = newpix
+    final_image_data["meta"]["mod"]="Symétrie horizontale"
+    return final_image_data
 
 def symVert(image_data):
     """
@@ -34,10 +35,12 @@ def symVert(image_data):
     for li in pix:
         li.reverse()
         newpix.append(li)
+        
+    final_image_data = image_data.copy()
     
-    image_data["pix"] = newpix
-    image_data["meta"]["mod"]="Symétrie verticale"
-    return image_data
+    final_image_data["pix"] = newpix
+    final_image_data["meta"]["mod"]="Symétrie verticale"
+    return final_image_data
 
 
 def rotation180(image_data):
@@ -55,7 +58,7 @@ def rotation180(image_data):
 
     img2 = symHori(image_data)
     img2 = symVert(img2)
-    newpix.append(img2)
+    # newpix.append(img2)
 
 
     img2["meta"]["mod"]="Rotation a 180 degrès"
@@ -104,6 +107,7 @@ def conversion_ppm_en_pgm(image_data : dict):
     final_image_data = image_data.copy()
     final_image_data["pix"] = tab
     final_image_data["meta"]["extension"] = ".pgm"
+    final_image_data["meta"]["mod"]="Conversion to pgm"
 
     return final_image_data
 
@@ -123,6 +127,7 @@ def bitmap_conversion(image_data , black_level : int):
     final_image_data = image_data.copy()
     final_image_data["pix"] = tab
     final_image_data["meta"]["extension"] = ".pbm"
+    final_image_data["meta"]["mod"]="Conversion to pbm"
     
     return final_image_data
 
@@ -149,5 +154,7 @@ def luminosity(image_data , intensity : int):
     
     final_image_data = image_data.copy()
     final_image_data["pix"] = new_pixtab
+    
+    final_image_data["meta"]["mod"]="Brightness modification"
     
     return final_image_data

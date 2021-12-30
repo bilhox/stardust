@@ -10,7 +10,7 @@ class App():
      def __init__(self , window_size : tuple):
           
           self.name = "Stardust"
-          self.version = "V0.1.3"
+          self.version = "V0.1.4.2"
           
           self.window_size = window_size
           

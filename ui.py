@@ -300,10 +300,8 @@ class Image():
      def load_by_data(self , image_data : dict , save=True):
           
           if save:
-               self.image_data_backup.append(self.image_data)
-               
+               self.image_data_backup.append(self.image_data.copy())
                if len(self.image_data_backup) == 3:
-                    print(self.image_data_backup)
                     self.image_data_backup.pop(0)
           
           self.image_data = image_data
