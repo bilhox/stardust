@@ -2,6 +2,7 @@ import pygame
 import scrollbar
 
 from ui import *
+from image import *
 from pygame.locals import *
 
 class SList():
@@ -83,7 +84,7 @@ class Img_displayer_panel():
           
           self.rect = Rect(pos , size)
           
-          self.of_label = Label([self.rect.width // 2 -50 , self.rect.height // 2-20] , 30 , {"stringValue":"Open file" , "color":[255 , 255 , 255]})
+          self.of_label = Label([self.rect.width // 2 -50 , self.rect.height // 2-20] , 30 , {"stringValue":"No file" , "color":[255 , 255 , 255]})
           self.img_displayer = Img_displayer([0 , 0] , self.rect.size)
           
           self.image_data_backup = []

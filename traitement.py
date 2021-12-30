@@ -1,3 +1,5 @@
+from math import *
+from decimal import *
 
 def symHori(image_data):
     """
@@ -156,5 +158,67 @@ def luminosity(image_data , intensity : int):
     final_image_data["pix"] = new_pixtab
     
     final_image_data["meta"]["mod"]="Brightness modification"
+    
+    return final_image_data
+
+def saturation(image_data , intensity : int):
+    
+    true_intensity = int((intensity / 100)*255)
+    
+    new_pixtab = []
+    
+    for y in image_data["pix"]:
+        ligne = []
+        for pixel in y:
+            new_rgb = []
+            moyenne = int((pixel[0] + pixel[1] + pixel[2])/3)
+            for color in pixel:
+                new_color = color + true_intensity
+                if new_color < moyenne:
+                    new_color = moyenne
+                elif new_color > 255:
+                    new_color = 255
+                new_rgb.append(new_color)
+            ligne.append(new_rgb)
+        new_pixtab.append(ligne)
+    
+    final_image_data = image_data.copy()
+    final_image_data["pix"] = new_pixtab
+    
+    final_image_data["meta"]["mod"]="Saturation modification"
+    
+    return final_image_data
+
+def rotation(image_data , degree):
+    
+    pixtab = []
+    center = [image_data["meta"]["lig"] // 2 , image_data["meta"]["col"] // 2]
+    
+    size = [0,0]
+    
+    for y , ligne in enumerate(image_data["pix"]):
+        
+        for x , pixel in enumerate(ligne):
+            
+            new_coord = [int((center[0] - x) * cos(degree)) , int((center[1] - y) * sin(degree))]
+            pixtab.append({"rgb":pixel , "coord":new_coord})
+            
+            if new_coord[1] > size[1]:
+                size[1] = new_coord[1]
+            elif new_coord[0] > size[0]:
+                size[0] = new_coord[0]
+    
+    new_pix = [[0]*size[0]]*size[1]
+    
+    for pixel_data in pixtab:
+        
+        print(pixel_data["coord"][1],pixel_data["coord"][0])
+        new_pix[pixel_data["coord"][1]][pixel_data["coord"][0]] = pixel_data["rgb"]
+    
+    final_image_data = image_data.copy()
+    final_image_data["pix"] = new_pix
+    final_image_data["meta"]["mod"]="Rotation"
+    final_image_data["meta"]["col"] = size[0]
+    final_image_data["meta"]["lig"] = size[1]
     
     return final_image_data

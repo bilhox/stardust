@@ -33,9 +33,9 @@ class App():
           self.panels["Img displayer"] = Img_displayer_panel([300 , 40] , [600 , 380])
           self.panels["File list"] = File_list([0 , 40],[300 , 380])
           
-          self.ui["label_of"] = Label([5 , 5] , 20 , {"stringValue":"Open file :"})
+          self.ui["label_of"] = Label([10 , 5] , 20 , {"stringValue":"Open file :"})
           
-          self.ui["entry_img1"] = Entry("entry_img1" , [self.ui["label_of"].font.size(self.ui["label_of"].stringValue)[0] + 10 , 5] , [300 , 30])
+          self.ui["entry_img1"] = Entry("entry_img1" , [self.ui["label_of"].font.size(self.ui["label_of"].stringValue)[0] + 20 , 5] , [300 , 30])
           self.ui["entry_img1"].default_text = "Enter img path :"
           
           self.ui["button_addFile"] = Button( [self.ui["entry_img1"].rect.width + self.ui["entry_img1"].rect.x + 5 , 5],[40 , 30],{"stringvalue":"add","align center":True})
@@ -68,10 +68,26 @@ class App():
           
           self.ui["entry_luminance"] =  Entry("entry_luminance", [370 , 510] , [120 , 30])
           self.ui["entry_luminance"].default_text = "Luminance - %"   
-          self.ui["entry_luminance"].max_lenght = 3
+          self.ui["entry_luminance"].max_lenght = 4
           self.ui["entry_luminance"].extra_string = "%" 
           
-          self.ui["button_undo"] = Button([850,420] , [50 , 30] , {"stringvalue":"back","align center":True})
+          self.ui["button_saturation"] = Button([240,550] , [120 , 30] , {"stringvalue":"Saturation","align center":True})
+          self.ui["button_saturation"].target = events.saturation
+          
+          self.ui["entry_saturation"] =  Entry("entry_saturation", [370 , 550] , [120 , 30])
+          self.ui["entry_saturation"].default_text = "saturation - %"   
+          self.ui["entry_saturation"].max_lenght = 4
+          self.ui["entry_saturation"].extra_string = "%" 
+          
+          # self.ui["button_rotation"] = Button([520,430] , [120 , 30] , {"stringvalue":"Rotate","align center":True})
+          # self.ui["button_rotation"].target = events.rotation
+          
+          # self.ui["entry_rotation"] =  Entry("entry_rotation", [650 , 430] , [120 , 30])
+          # self.ui["entry_rotation"].default_text = "rotation - °"   
+          # self.ui["entry_rotation"].max_lenght = 4
+          # self.ui["entry_rotation"].extra_string = "°" 
+          
+          self.ui["button_undo"] = Button([850,420] , [50 , 30] , {"stringvalue":"undo","align center":True})
           self.ui["button_undo"].target = events.undo
      
      def events(self):

@@ -2,6 +2,7 @@ import pygame
 import traitement
 
 from ui import *
+from image import *
 from pygame.locals import *
 
 app = None
@@ -105,6 +106,21 @@ def luminosity():
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
+
+def saturation():
+     
+     try:
+          int_saturation = int(app.ui["entry_saturation"].stringValue)
+          image_data = traitement.saturation(app.panels["Img displayer"].img_displayer.image.image_data , int_saturation)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+     except:
+          pass
+     
+def rotation():
+     
+     degree = int(app.ui["entry_rotation"].stringValue)
+     image_data = traitement.rotation(app.panels["Img displayer"].img_displayer.image.image_data , degree)
+     app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
 
 def extend(package):
      
