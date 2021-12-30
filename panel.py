@@ -59,12 +59,12 @@ class File_list(SList):
 
      def display(self, surface):
           
-          tsh = len(self.files) * 26
+          tsh = len(self.files) * 20
           
           true_surface = pygame.Surface([self.rect.width , tsh])
           
           for index , selector in enumerate(self.files):
-               selector.rect.y = index * 26
+               selector.rect.y = index * 20
                selector.display(true_surface)
           
           self.true_surface = true_surface
@@ -110,5 +110,46 @@ class Img_displayer_panel():
                self.img_displayer.display(final_surface)
           
           surface.blit(final_surface , [self.rect.x , self.rect.y])
+
+
+class Window_panel:
+     
+     def __init__(self):
+          
+          self.rect = Rect([275 , 50] , [350 , 500])
+          self.title = "File manager"
+          
+          self.title_font = pygame.font.Font("./fonts/pt_sans/PTSans-Regular.ttf", 20)
+          
+          self.quit_button = Button([self.rect.width - 45 , 0],[45 , 30],{"stringvalue":"X","align center":True} , target_arguments=self)
+          self.quit_button.target = events.close_window
+          
+          self.title_label = Label([2 , 2] , 24 , {"stringValue":self.title})
+          self.title_label.font = self.title_font
+          
+          self.opened = False
+     
+     def quit(self):
+          self.opened = False
+     
+     def event_handler(self , event : pygame.event.Event):
+          
+          if self.opened:
+               
+               self.quit_button.event_handler(event , [self.rect.x , self.rect.y])
+     
+     def display(self , surface):
+          
+          if self.opened:
+               
+               final_surface = pygame.Surface(self.rect.size)
+               final_surface.fill([123, 146, 173])
+               
+               pygame.draw.rect(final_surface, [64, 93, 128], Rect([0,0],[self.rect.width , 30]))
+               
+               self.title_label.display(final_surface)
+               self.quit_button.display(final_surface)
+               
+               surface.blit(final_surface , [self.rect.x , self.rect.y])
           
           

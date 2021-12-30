@@ -7,6 +7,22 @@ from pygame.locals import *
 
 app = None
 
+def open_window(window):
+     
+     filtre = pygame.Surface(app.screen.get_rect().size , SRCALPHA)
+     filtre.fill([0, 0, 0 , 64])
+     
+     app.screen.blit(filtre , [0,0])
+     
+     window.opened = True
+     app.is_window_open = True
+
+def close_window(window):
+     
+     window.opened = False
+     app.is_window_open = False
+
+
 def undo():
      try:
           backup = app.panels["Img displayer"].img_displayer.image.image_data_backup.pop()
@@ -20,7 +36,7 @@ def add_file():
      try:
           image.load(app.ui["entry_img1"].stringValue)
           height = len(app.panels["File list"].files)
-          selector = Image_selector([0,height * 26],[app.panels["File list"].rect.width - 20 , 26],{"stringvalue":image.name , "padding left":20} , image)
+          selector = Image_selector([0,height * 20],[app.panels["File list"].rect.width - 20 , 20],{"stringvalue":image.name , "padding left":20} , image)
           selector.target = load_image
           app.panels["File list"].files.append(selector)
      except:

@@ -1,5 +1,6 @@
 from math import *
 from decimal import *
+from image import *
 
 def symHori(image_data):
     """
@@ -135,22 +136,14 @@ def bitmap_conversion(image_data , black_level : int):
 
 def luminosity(image_data , intensity : int):
     
-    true_luminance = int((intensity / 100)*255)
-    
     new_pixtab = []
     
     for y in image_data["pix"]:
         ligne = []
         for pixel in y:
-            rgb = pixel
-            new_rgb = []
-            for color in rgb:
-                new_color = color + true_luminance
-                if new_color < 0:
-                    new_color = 0
-                elif new_color > 255:
-                    new_color = 255
-                new_rgb.append(new_color)
+            hsl = Image.rgb_to_hsl(pixel)
+            hsl[2] = intensity
+            new_rgb = Image.hsl_to_rgb(hsl)
             ligne.append(new_rgb)
         new_pixtab.append(ligne)
     
@@ -163,22 +156,19 @@ def luminosity(image_data , intensity : int):
 
 def saturation(image_data , intensity : int):
     
-    true_intensity = int((intensity / 100)*255)
-    
     new_pixtab = []
+    
+    if intensity > 100:
+        intensity = 100
+    elif intensity < 0:
+        intensity = 100
     
     for y in image_data["pix"]:
         ligne = []
         for pixel in y:
-            new_rgb = []
-            moyenne = int((pixel[0] + pixel[1] + pixel[2])/3)
-            for color in pixel:
-                new_color = color + true_intensity
-                if new_color < moyenne:
-                    new_color = moyenne
-                elif new_color > 255:
-                    new_color = 255
-                new_rgb.append(new_color)
+            hsl = Image.rgb_to_hsl(pixel)
+            hsl[1] = intensity
+            new_rgb = Image.hsl_to_rgb(hsl)
             ligne.append(new_rgb)
         new_pixtab.append(ligne)
     

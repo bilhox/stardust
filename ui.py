@@ -181,6 +181,9 @@ class Image_selector(Button):
      def __init__(self, pos : tuple , size : tuple , stringValue : str , value):
           super().__init__(pos , size , stringValue , None)
           
+          self.font = pygame.font.Font("./fonts/pt_sans/PTSans-Regular.ttf" , 14)
+          self.font.bold = True
+          
           self.selected = False
           self.value = value
           

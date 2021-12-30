@@ -7,12 +7,12 @@ from panel import *
 
 class App():
      
-     def __init__(self , window_size : tuple):
+     def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.4.2"
+          self.version = "V0.1.5.2"
           
-          self.window_size = window_size
+          self.window_size = [900 , 600]
           
           self.panels = {}
           self.ui = {}
@@ -23,6 +23,8 @@ class App():
           icon = pygame.image.load("./imgs/logo.png")
           icon.convert_alpha()
           pygame.display.set_icon(icon)
+          
+          self.is_window_open = False
      
      def Start(self):
           
@@ -32,6 +34,7 @@ class App():
           
           self.panels["Img displayer"] = Img_displayer_panel([300 , 40] , [600 , 380])
           self.panels["File list"] = File_list([0 , 40],[300 , 380])
+          self.panels["File manager"] = Window_panel()
           
           self.ui["label_of"] = Label([10 , 5] , 20 , {"stringValue":"Open file :"})
           
@@ -98,10 +101,15 @@ class App():
                
                for panel in self.panels.values():
                     
-                    panel.event_handler(event)
-               
-               for ui in self.ui.values():
-                    ui.event_handler(event)
+                    if not self.is_window_open:
+                         panel.event_handler(event)
+                    else:
+                         if isinstance(panel , Window_panel):
+                              panel.event_handler(event)
+                         
+               if not self.is_window_open:
+                    for ui in self.ui.values():
+                         ui.event_handler(event)
      
      def Update(self):
           
@@ -114,16 +122,21 @@ class App():
      
      def Display(self):
           
-          self.screen.fill([90,90,90])
-          
-          for panel in self.panels.values():
-               panel.display(self.screen)
-          
-          for ui in self.ui.values():
-               ui.display(self.screen)
+          if not self.is_window_open:
+               self.screen.fill([90,90,90])
+               
+               for panel in self.panels.values():
+                    panel.display(self.screen)
+               
+               for ui in self.ui.values():
+                    ui.display(self.screen)
+          else:
+               for panel in self.panels.values():
+                    if isinstance(panel , Window_panel):
+                         panel.display(self.screen)
 
 def main():
-     app = App([900 , 600])
+     app = App()
      events.app = app
      app.Start()
 

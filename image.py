@@ -122,7 +122,87 @@ class Image():
                                    f.write(' '*(4-len(val))+val)
                          f.write('\n')
                f.close()
+     
+     @staticmethod
+     def rgb_to_hsl(rgb : list):
           
+          r = rgb[0] / 255
+          g = rgb[1] / 255
+          b = rgb[2] / 255
+          
+          cMin = min([r , g , b])
+          cMax = max([r , g , b])
+          
+          luminance = (cMax + cMin) / 2
+          saturation = 0
+          hue = 0
+          
+          if not cMax == cMin:
+               if luminance <= 0.5:
+                    saturation = (cMax - cMin) / (cMin + cMax)
+               elif luminance > 0.5:
+                    saturation = (cMax - cMin) / (2 - cMin - cMax)
+               
+               if cMax == r:
+                    hue = (g - b)/(cMax - cMin)
+               elif cMax == g:
+                    hue = 2 + (b - r)/(cMax - cMin)
+               elif cMax == b:
+                    hue = 4 + (r - g)/(cMax - cMin)
+               
+               if hue < 0:
+                    hue += 360
+                    
+               hue = hue * 60
+          
+          return [hue , saturation * 100 , luminance * 100]
+
+     @staticmethod
+     def hsl_to_rgb(hsl : list):
+          
+          hue = hsl[0]
+          saturation = hsl[1] / 100
+          luminance = hsl[2] / 100
+          
+          if saturation == 0:
+               r , g , b = int(luminance * 255) , int(luminance * 255) , int(luminance * 255)
+               return [r , g , b]
+          
+          t1 = 0
+          
+          if luminance < 0.5:
+               t1 = luminance * (1 + saturation)
+          else:
+               t1 = luminance + saturation - (luminance * saturation)
+          
+          t2 = 2 * luminance - t1
+          
+          hue = hue / 360
+          
+          rgbBis = [hue + 0.3333 , hue , hue - 0.3333]
+          
+          for index in range(3):
+               if rgbBis[index] > 1:
+                    rgbBis[index] -= 1
+               elif rgbBis[index] < 0:
+                    rgbBis[index] += 1
+          
+          rgb = []
+          
+          for value in rgbBis:
+               if 6*value < 1:
+                    final_color = t2 + (t1 - t2)
+               elif 2*value < 1:
+                    final_color = t1
+               elif 3*value < 2:
+                    final_color = t2 + (t1 - t2) * (0.6666 - value) * 6
+               else:
+                    final_color = t2
+               
+               rgb.append(final_color)
+          
+          return [int(rgb[0]*255) , int(rgb[1]*255) , int(rgb[2]*255)]
+     
      
      def display(self , surface : pygame.Surface , centered=False):
           
@@ -184,9 +264,8 @@ class Img_displayer():
                          self.zoom = final_zoom
                          return
           
-          self.zoom = final_zoom
-                    
-               
+          self.zoom = final_zoom            
+          
      
      def display(self , surface : pygame.Surface):
           
