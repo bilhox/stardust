@@ -6,8 +6,13 @@ from pygame.locals import *
 
 app = None
 
-def load_image_test():
-     app.panels["Img displayer"].img_displayer.image.load("./imgs/salva.ppm")
+def undo():
+     try:
+          backup = app.panels["Img displayer"].img_displayer.image.image_data_backup.pop()
+          app.panels["Img displayer"].img_displayer.image.load_by_data(backup , False)
+     except:
+          pass
+     
      
 def add_file():
      image = Image([0,0])
@@ -88,6 +93,15 @@ def pbm_conv():
      try:
           int_conv = int(app.ui["entry_intConvPBM"].stringValue)
           image_data = traitement.bitmap_conversion(app.panels["Img displayer"].img_displayer.image.image_data , int_conv)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+     except:
+          pass
+
+def luminosity():
+     
+     try:
+          luminance = int(app.ui["entry_luminance"].stringValue)
+          image_data = traitement.luminosity(app.panels["Img displayer"].img_displayer.image.image_data , luminance)
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass

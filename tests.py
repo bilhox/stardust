@@ -1,3 +1,4 @@
+
 # import pygame
 # import sys
 # import panel
@@ -33,19 +34,37 @@
      
 #      pygame.display.flip()
 
-class Foo():
+# class Foo():
      
-     def __init__(self):
-          self.name = 'zefzef'
+#      def __init__(self):
+#           self.name = 'zefzef'
 
-class Foo2():
+# class Foo2():
      
-     def __init__(self):
-          self.name = "errerer"
+#      def __init__(self):
+#           self.name = "errerer"
 
-foo = Foo()
-fooBis = Foo2()
-dic = {foo:fooBis}
+# foo = Foo()
+# fooBis = Foo2()
+# dic = {foo:fooBis}
 
-for key in dic:
-     print(key)
+# for key in dic:
+#      print(key)
+
+# from math import *
+# b = 3
+# a = 2
+
+# while b - a > 0.1:
+     
+#      m = (a+b)/2
+     
+#      if exp(m) + exp(-m) - 4*m - 2 > 0:
+#           b = m
+#      else:
+#           a = m
+
+# print(a , b)
+
+if len("dede") == 3:
+     print(True)

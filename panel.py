@@ -83,9 +83,10 @@ class Img_displayer_panel():
           
           self.rect = Rect(pos , size)
           
-          self.of_button = Button([self.rect.width // 2 -50 , self.rect.height // 2-20] , [100 , 40] , {"stringvalue":"Open image","align center":True})
-          self.of_button.target = events.load_image_test
+          self.of_label = Label([self.rect.width // 2 -50 , self.rect.height // 2-20] , 30 , {"stringValue":"Open file" , "color":[255 , 255 , 255]})
           self.img_displayer = Img_displayer([0 , 0] , self.rect.size)
+          
+          self.image_data_backup = []
      
      def update(self):
           
@@ -94,9 +95,7 @@ class Img_displayer_panel():
           
      def event_handler(self , event):
           
-          if not self.img_displayer.image.image_loaded:
-               self.of_button.event_handler(event , [self.rect.x , self.rect.y])
-          else:
+          if self.img_displayer.image.image_loaded:
                self.img_displayer.event_handler(event , [self.rect.x , self.rect.y])
      
      def display(self , surface):
@@ -105,7 +104,7 @@ class Img_displayer_panel():
           final_surface.fill([10,10,10])
           
           if not self.img_displayer.image.image_loaded:
-               self.of_button.display(final_surface)
+               self.of_label.display(final_surface)
           else:
                self.img_displayer.display(final_surface)
           

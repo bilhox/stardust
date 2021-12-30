@@ -1,3 +1,4 @@
+
 def symHori(image_data):
      """
      Symétrie axe horizontale
@@ -122,5 +123,31 @@ def bitmap_conversion(image_data , black_level : int):
     final_image_data = image_data.copy()
     final_image_data["pix"] = tab
     final_image_data["meta"]["extension"] = ".pbm"
+    
+    return final_image_data
+
+def luminosity(image_data , intensity : int):
+    
+    true_luminance = int((intensity / 100)*255)
+    
+    new_pixtab = []
+    
+    for y in image_data["pix"]:
+        ligne = []
+        for pixel in y:
+            rgb = pixel
+            new_rgb = []
+            for color in rgb:
+                new_color = color + true_luminance
+                if new_color < 0:
+                    new_color = 0
+                elif new_color > 255:
+                    new_color = 255
+                new_rgb.append(new_color)
+            ligne.append(new_rgb)
+        new_pixtab.append(ligne)
+    
+    final_image_data = image_data.copy()
+    final_image_data["pix"] = new_pixtab
     
     return final_image_data

@@ -33,14 +33,18 @@ class App():
           self.panels["Img displayer"] = Img_displayer_panel([300 , 40] , [600 , 380])
           self.panels["File list"] = File_list([0 , 40],[300 , 380])
           
-          self.ui["entry_img1"] = Entry("entry_img1" , [0 , 0] , [300 , 40])
-          self.ui["button_render"] = Button( [300 , 0],[40 , 40],{"stringvalue":"add","align center":True})
-          self.ui["button_render"].target = events.add_file
+          self.ui["label_of"] = Label([5 , 5] , 20 , {"stringValue":"Open file :"})
           
-          self.ui["button_SymHori"] = Button([10,430] , [200 , 30] , {"stringvalue":"Sym Horiz","align center":True})
+          self.ui["entry_img1"] = Entry("entry_img1" , [self.ui["label_of"].font.size(self.ui["label_of"].stringValue)[0] + 10 , 5] , [300 , 30])
+          self.ui["entry_img1"].default_text = "Enter img path :"
+          
+          self.ui["button_addFile"] = Button( [self.ui["entry_img1"].rect.width + self.ui["entry_img1"].rect.x + 5 , 5],[40 , 30],{"stringvalue":"add","align center":True})
+          self.ui["button_addFile"].target = events.add_file
+          
+          self.ui["button_SymHori"] = Button([10,430] , [200 , 30] , {"stringvalue":"Horizontal symmetry","align center":True})
           self.ui["button_SymHori"].target = events.sym_hori
           
-          self.ui["button_SymVert"] = Button([10,470] , [200 , 30] , {"stringvalue":"Sym Vert","align center":True})
+          self.ui["button_SymVert"] = Button([10,470] , [200 , 30] , {"stringvalue":"Vertical symmetry","align center":True})
           self.ui["button_SymVert"].target = events.sym_vert
 
           self.ui["button_rot180"] = Button([50,510] , [120 , 30] , {"stringvalue":"Rot 180°","align center":True})
@@ -55,7 +59,20 @@ class App():
           self.ui["button_convPBM"] = Button([240,470] , [120 , 30] , {"stringvalue":"To PBM","align center":True})
           self.ui["button_convPBM"].target = events.pbm_conv  
           
-          self.ui["entry_intConvPBM"] =  Entry("entry_intConvPBM", [240 , 510] , [120 , 30])    
+          self.ui["entry_intConvPBM"] =  Entry("entry_intConvPBM", [370 , 470] , [120 , 30])
+          self.ui["entry_intConvPBM"].default_text = "Intensity"   
+          self.ui["entry_intConvPBM"].max_lenght = 3 
+          
+          self.ui["button_lum"] = Button([240,510] , [120 , 30] , {"stringvalue":"Brightness","align center":True})
+          self.ui["button_lum"].target = events.luminosity
+          
+          self.ui["entry_luminance"] =  Entry("entry_luminance", [370 , 510] , [120 , 30])
+          self.ui["entry_luminance"].default_text = "Luminance - %"   
+          self.ui["entry_luminance"].max_lenght = 3
+          self.ui["entry_luminance"].extra_string = "%" 
+          
+          self.ui["button_undo"] = Button([850,420] , [50 , 30] , {"stringvalue":"back","align center":True})
+          self.ui["button_undo"].target = events.undo
      
      def events(self):
           for event in pygame.event.get():

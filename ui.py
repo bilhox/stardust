@@ -6,6 +6,31 @@ import support
 
 from pygame.locals import *
 
+class Label():
+     
+     def __init__(self , pos : tuple , font_size : int , string_parameter):
+          
+          """
+          string_parameter is a dictionnary with all parameters of the string
+          Required key : stringValue
+          """
+          
+          self.pos = pos
+          self.stringValue = string_parameter["stringValue"]
+          self.color = string_parameter["color"] if "color" in string_parameter else [0,0,0]
+          
+          self.font = pygame.font.Font("./fonts/pt_sans/PtSans-Regular.ttf", font_size )
+     
+     def event_handler(self , event):
+          pass
+     
+     def change_font(self , font_size : int):
+          self.font = pygame.font.Font("./fonts/pt_sans/PtSans-Regular.ttf", font_size )
+     
+     def display(self , surface):
+          
+          surface.blit(self.font.render(self.stringValue , True , self.color) , self.pos)
+
 
 class Entry:
      
@@ -20,6 +45,10 @@ class Entry:
           self.cursor = 0
           self.cursor_displayed = True
           self.target_arguments = target_arguments
+          
+          self.default_text = "Enter text"
+          self.max_lenght = 200
+          self.extra_string = ""
           
           self.font = pygame.font.Font("./fonts/pt_sans/PtSans-Regular.ttf", 14 )
           
@@ -68,7 +97,7 @@ class Entry:
                     self.cursor += 1
                elif event.key == K_LEFT:
                     self.cursor -= 1
-               elif event.unicode in " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\-_.éàèù" and event.unicode != "":
+               elif event.unicode in " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\-_.éàèù" and event.unicode != "" and len(self.stringValue) < self.max_lenght:
                     self.stringValue = self.stringValue[:self.cursor] + event.unicode + self.stringValue[self.cursor:]
                     self.cursor += 1
           
@@ -84,9 +113,14 @@ class Entry:
      def display(self , screen):
           
           final_surf = self.texture.copy()
-          text_offset = (self.font.size(self.stringValue[:self.cursor])[0] + 1 - self.rect.width) if self.font.size(self.stringValue[:self.cursor])[0] > self.rect.width else 0
-          pygame.draw.line(final_surf, [0,0,0], (self.font.size(self.stringValue[:self.cursor])[0]  + 1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2), (self.font.size(self.stringValue[:self.cursor])[0] + 1 - text_offset , self.rect.height // 2 + self.font.size(self.stringValue)[1] // 2), 2) if self.writing else None
-          final_surf.blit(self.font.render(self.stringValue , True , [0,0,0]) , [1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+          text_offset = (self.font.size(self.stringValue[:self.cursor]+self.extra_string)[0] + 1 - self.rect.width) if self.font.size(self.stringValue[:self.cursor]+self.extra_string)[0] > self.rect.width else 0
+          
+          if self.stringValue != "":
+               pygame.draw.line(final_surf, [0,0,0], (self.font.size(self.stringValue[:self.cursor])[0]  + 1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2), (self.font.size(self.stringValue[:self.cursor])[0] + 1 - text_offset , self.rect.height // 2 + self.font.size(self.stringValue)[1] // 2), 2) if self.writing else None
+               final_surf.blit(self.font.render(self.stringValue+self.extra_string , True , [0,0,0]) , [1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+          else:
+               text_size = self.font.size(self.default_text)
+               final_surf.blit(self.font.render(self.default_text , True , [0,0,0]) , [self.rect.width // 2 - text_size[0] // 2 , self.rect.height // 2 - text_size[1] // 2])
           screen.blit(final_surf , [self.rect.x , self.rect.y])
 
 class Button():
@@ -216,6 +250,8 @@ class Image():
           self.pos = pos
           self.image_loaded = False
           self.image_data = {}
+          
+          self.image_data_backup = []
      
      def load(self , path):
           
@@ -261,7 +297,14 @@ class Image():
           
           self.image_loaded = True
      
-     def load_by_data(self , image_data : dict):
+     def load_by_data(self , image_data : dict , save=True):
+          
+          if save:
+               self.image_data_backup.append(self.image_data)
+               
+               if len(self.image_data_backup) == 3:
+                    print(self.image_data_backup)
+                    self.image_data_backup.pop(0)
           
           self.image_data = image_data
           
