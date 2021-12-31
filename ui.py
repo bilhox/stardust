@@ -19,13 +19,13 @@ class Label():
           self.stringValue = string_parameter["stringValue"]
           self.color = string_parameter["color"] if "color" in string_parameter else [0,0,0]
           
-          self.font = pygame.font.Font("./fonts/pt_sans/PtSans-Regular.ttf", font_size )
+          self.font = pygame.font.Font("./fonts/Readex_Pro/static/ReadexPro-Medium.ttf", font_size )
      
      def event_handler(self , event):
           pass
      
      def change_font(self , font_size : int):
-          self.font = pygame.font.Font("./fonts/pt_sans/PtSans-Regular.ttf", font_size )
+          self.font = pygame.font.Font("./fonts/Readex_Pro/static/ReadexPro-Medium.ttf", font_size )
      
      def display(self , surface):
           
@@ -34,23 +34,25 @@ class Label():
 
 class Entry:
      
-     def __init__(self , name : str , pos : tuple , size : tuple , target_arguments=None):
+     def __init__(self , name : str , pos : tuple , size : tuple , text_color=[0,0,0]):
           
           self.name = name
+          
           self.rect = Rect(pos , size)
           self.texture = pygame.Surface(size)
           self.texture.fill([160 , 160 , 160])
+          
           self.stringValue = ""
           self.writing = False
           self.cursor = 0
           self.cursor_displayed = True
-          self.target_arguments = target_arguments
           
           self.default_text = "Enter text"
           self.max_lenght = 200
           self.extra_string = ""
+          self.text_color = text_color
           
-          self.font = pygame.font.Font("./fonts/pt_sans/PtSans-Regular.ttf", 14 )
+          self.font = pygame.font.Font("./fonts/Readex_Pro/static/ReadexPro-Regular.ttf", 14 )
           
           self.key_pressed = None
           self.timing = 0
@@ -116,11 +118,11 @@ class Entry:
           text_offset = (self.font.size(self.stringValue[:self.cursor]+self.extra_string)[0] + 1 - self.rect.width) if self.font.size(self.stringValue[:self.cursor]+self.extra_string)[0] > self.rect.width else 0
           
           if self.stringValue != "":
-               pygame.draw.line(final_surf, [0,0,0], (self.font.size(self.stringValue[:self.cursor])[0]  + 1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2), (self.font.size(self.stringValue[:self.cursor])[0] + 1 - text_offset , self.rect.height // 2 + self.font.size(self.stringValue)[1] // 2), 2) if self.writing else None
-               final_surf.blit(self.font.render(self.stringValue+self.extra_string , True , [0,0,0]) , [1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+               pygame.draw.line(final_surf, self.text_color, (self.font.size(self.stringValue[:self.cursor])[0]  + 1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2), (self.font.size(self.stringValue[:self.cursor])[0] + 1 - text_offset , self.rect.height // 2 + self.font.size(self.stringValue)[1] // 2), 2) if self.writing else None
+               final_surf.blit(self.font.render(self.stringValue+self.extra_string , True , self.text_color) , [1 - text_offset , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           else:
                text_size = self.font.size(self.default_text)
-               final_surf.blit(self.font.render(self.default_text , True , [0,0,0]) , [self.rect.width // 2 - text_size[0] // 2 , self.rect.height // 2 - text_size[1] // 2])
+               final_surf.blit(self.font.render(self.default_text , True , self.text_color) , [self.rect.width // 2 - text_size[0] // 2 , self.rect.height // 2 - text_size[1] // 2])
           screen.blit(final_surf , [self.rect.x , self.rect.y])
 
 class Button():
@@ -139,6 +141,7 @@ class Button():
           
           self.align_center = stringParameter["align center"] if "align center" in stringParameter else False
           self.padding_left = stringParameter["padding left"] if "padding left" in stringParameter else 0
+          self.color = stringParameter["color"] if "color" in stringParameter else [0,0,0]
           self.stringValue = stringParameter["stringvalue"]
           self.case = 0
           self.target_arguments = target_arguments
@@ -147,6 +150,13 @@ class Button():
           self.event_time = 20
           self.display_hc = False
           self.hover_content = ""
+          
+     def load_textures(self , textures):
+          
+          for index in range(len(self.textures)):
+               self.textures[index] = pygame.transform.scale(textures[index] , self.rect.size)
+
+               
           
      def event_handler(self , event : pygame.event.Event , button_zone_offset=[0,0]):
                
@@ -171,9 +181,9 @@ class Button():
           
           final_texture = self.textures[self.case].copy()
           if self.align_center:
-               final_texture.blit(self.font.render(self.stringValue , True , [0,0,0]) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           else:
-               final_texture.blit(self.font.render(self.stringValue , True , [0,0,0]) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           screen.blit(final_texture , [self.rect.x , self.rect.y])
 
 class Image_selector(Button):
@@ -181,8 +191,7 @@ class Image_selector(Button):
      def __init__(self, pos : tuple , size : tuple , stringValue : str , value):
           super().__init__(pos , size , stringValue , None)
           
-          self.font = pygame.font.Font("./fonts/pt_sans/PTSans-Regular.ttf" , 14)
-          self.font.bold = True
+          self.font = pygame.font.Font("./fonts/Readex_Pro/static/ReadexPro-Medium.ttf" , 12)
           
           self.selected = False
           self.value = value
@@ -233,9 +242,9 @@ class Image_selector(Button):
           
           final_texture = self.textures[self.case].copy()
           if self.align_center:
-               final_texture.blit(self.font.render(self.stringValue , True , [0,0,0]) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           else:
-               final_texture.blit(self.font.render(self.stringValue , True , [0,0,0]) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           
           if self.display_sb:
                self.delete_button.display(final_texture)

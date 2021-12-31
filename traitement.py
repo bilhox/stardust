@@ -114,7 +114,10 @@ def conversion_ppm_en_pgm(image_data : dict):
 
     return final_image_data
 
-def bitmap_conversion(image_data , black_level : int):
+def bitmap_conversion(image_data , intensity : int):
+         
+    black_level = (intensity / 100) * (3*255)
+    
     tab = []
     for y in image_data["pix"]:
         ligne = []
