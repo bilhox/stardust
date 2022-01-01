@@ -10,17 +10,19 @@ app = None
 def open_window(window):
      
      filtre = pygame.Surface(app.screen.get_rect().size , SRCALPHA)
-     filtre.fill([0, 0, 0 , 64])
+     filtre.fill([0, 0, 0 , 128])
      
      app.screen.blit(filtre , [0,0])
      
      window.opened = True
      app.is_window_open = True
+     app.current_window = window
 
 def close_window(window):
      
      window.opened = False
      app.is_window_open = False
+     app.current_window = None
 
 
 def undo():
@@ -29,35 +31,67 @@ def undo():
           app.panels["Img displayer"].img_displayer.image.load_by_data(backup , False)
      except:
           pass
-     
+
+def search_files():
+
+     try:
+          path = app.current_window.components["entry_folderPath"].stringValue
+          file_list = os.listdir(path)
+          
+          if len(app.current_window.components["FileList_fileFounded"].files) != 0:
+               app.current_window.components["FileList_fileFounded"].files = []
+          
+          for file in file_list:
+               height = len(app.current_window.components["FileList_fileFounded"].files)
+               selector = File_selector([0,height * 20],[app.current_window.components["FileList_fileFounded"].rect.width - 20 , 20],{"stringvalue":file , "padding left":20 , "color":[255 , 255 , 255]} , path+"\\"+file)
+               
+               textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
+               
+               textures[0].fill([18, 12, 54, 0])
+               textures[1].fill([58, 42, 142, 0.60*128])
+               textures[2].fill([58, 42, 142, 1*128])
+               
+               selector.load_textures(textures)
+               
+               app.current_window.components["FileList_fileFounded"].files.append(selector)
+     except:
+          pass
      
 def add_file():
      image = Image([0,0])
-     try:
-          image.load(app.ui["entry_img1"].stringValue)
-          height = len(app.panels["File list"].files)
-          oc = ""
-          oc_number = 0
-          for select in app.panels["File list"].files:
-               if select.value.name == image.name:
-                    oc_number += 1
           
-          if oc_number != 0:
-               oc = f" ( {oc_number} )"
-          selector = Image_selector([0,height * 20],[app.panels["File list"].rect.width - 20 , 20],{"stringvalue":image.name+oc , "padding left":20 , "color":[255 , 255 , 255]} , image)
+     selector = None
+     for select in app.current_window.components["FileList_fileFounded"].files:
+          if select.selected:
+               selector = select
+     
+     if selector == None:
+          return
           
-          textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
-          
-          textures[0].fill([18, 12, 54, 0])
-          textures[1].fill([58, 42, 142, 0.60*128])
-          textures[2].fill([58, 42, 142, 1*128])
-          
-          selector.load_textures(textures)
-          
-          selector.target = load_image
-          app.panels["File list"].files.append(selector)
-     except:
-          pass
+     image.load(selector.value)
+     height = len(app.panels["File list"].files)
+     oc = ""
+     oc_number = 0
+     for select in app.panels["File list"].files:
+          if select.value.name == image.name:
+               oc_number += 1
+     
+     if oc_number != 0:
+          oc = f" ( {oc_number} )"
+     selector = Image_selector([0,height * 20],[app.panels["File list"].rect.width - 20 , 20],{"stringvalue":image.name+oc , "padding left":20 , "color":[255 , 255 , 255]} , image)
+     
+     textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
+     
+     textures[0].fill([18, 12, 54, 0])
+     textures[1].fill([58, 42, 142, 0.60*128])
+     textures[2].fill([58, 42, 142, 1*128])
+     
+     selector.load_textures(textures)
+     
+     selector.target = load_image
+     app.panels["File list"].files.append(selector)
+     
+     close_window(app.current_window)
 
 
 def load_image(image):

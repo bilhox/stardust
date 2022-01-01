@@ -17,18 +17,16 @@ class SList():
           self.scrollbar_2 = scrollbar.Scrollbar(self , False)
           
           self.true_surface = pygame.Surface(self.rect.size)
-          
-          self.scrollbar_hid = False
      
      def update(self):
           
           # self.scrollbar_1.update()
           self.scrollbar_2.update()
           
-     def event_handler(self , event):
+     def event_handler(self , event , zone_offset=[0,0]):
           
           # self.scrollbar_1.event_handler(event)
-          self.scrollbar_2.event_handler(event)
+          self.scrollbar_2.event_handler(event , [zone_offset[0],zone_offset[1]])
      
      def display(self , surface):
           
@@ -53,14 +51,14 @@ class Image_list(SList):
      def update(self):
           super().update()
      
-     def event_handler(self, event):
-          super().event_handler(event)
+     def event_handler(self, event , offset=[0,0]):
+          super().event_handler(event , offset)
           
           if event.type == (MOUSEBUTTONDOWN or MOUSEBUTTONUP) and not self.rect.collidepoint(event.pos):
                return
           
           for selector in self.files:
-               selector.event_handler(event , [self.true_surface.get_rect().x+self.rect.x , self.rect.y+self.scrollbar_2.ts_diff])
+               selector.event_handler(event , [self.true_surface.get_rect().x+self.rect.x+offset[0] , self.rect.y+self.scrollbar_2.ts_diff+offset[1]])
                
 
      def display(self, surface):
@@ -79,13 +77,12 @@ class Image_list(SList):
           final_surface = pygame.Surface(self.rect.size)
           final_surface.fill(self.color)
           
-          if not self.scrollbar_hid:
+          if not self.scrollbar_2.scrollbar_hid:
                final_surface.blit(self.true_surface , [0 , self.scrollbar_2.ts_diff])
+               self.scrollbar_2.display(final_surface)
           else:
                self.scrollbar_2.ts_diff = 0
                final_surface.blit(self.true_surface , [0 , 0])
-          
-          self.scrollbar_2.display(final_surface)
           
           surface.blit(final_surface , [self.rect.x , self.rect.y])
           
@@ -122,58 +119,6 @@ class Img_displayer_panel():
                self.img_displayer.display(final_surface)
           
           surface.blit(final_surface , [self.rect.x , self.rect.y])
-
-
-class Window_panel:
-     
-     def __init__(self , size):
-          
-          self.title = "New window"
-          
-          pos = pygame.display.Info().current_w , pygame.display.Info().current_h
-          pos = [pos[0] // 2 - size[0] // 2 , pos[1] // 2 - size[1] // 2]
-
-          self.wb_rect = Rect(pos,[size[0] , 30])
-          self.wb_color = [255 , 255 , 255 , 64]
-          
-          self.surface_rect = Rect([pos[0] , pos[1]+self.wb_rect.height] , size)
-          self.surface_color = [100 , 100 , 100]
-          
-          self.quit_button = Button([self.wb_rect.width - 45 , 0],[45 , 30],{"stringvalue":"X","align center":True} , target_arguments=self)
-          self.quit_button.target = events.close_window
-          
-          self.title_label = Label([20 , 2] , 20 , {"stringValue":self.title,"color":[255 , 255 , 255]})
-          
-          self.opened = False
-     
-     def quit(self):
-          self.opened = False
-     
-     def event_handler(self , event : pygame.event.Event):
-          
-          if self.opened:
-               
-               self.quit_button.event_handler(event , [self.wb_rect.x , self.wb_rect.y])
-     
-     def display(self , surface : pygame.Surface):
-          
-          if self.opened:
-               
-               final_surface = pygame.Surface([self.surface_rect.w , self.surface_rect.h  + self.wb_rect.h])
-               
-               wb_surface = pygame.Surface(self.wb_rect.size , SRCALPHA)
-               wb_surface.fill(self.wb_color)
-               
-               self.title_label.display(wb_surface)
-               self.quit_button.display(wb_surface)
-               
-               w_surface = pygame.Surface(self.surface_rect.size , SRCALPHA)
-               w_surface.fill(self.surface_color)
-               
-               final_surface.blit(wb_surface , [0,0])
-               final_surface.blit(w_surface , [0 , self.wb_rect.height])
-               
-               surface.blit(final_surface , [self.wb_rect.x , self.wb_rect.y])
                
 class UI_panel():
      
@@ -184,15 +129,6 @@ class UI_panel():
           
           self.texture = pygame.Surface(self.rect.size)
           self.texture.fill([26, 31, 56])
-     
-     def load_textures(self , textures):
-          
-          for component in self.components.values():
-               
-               if isinstance(component , Button):
-                    component.load_textures(textures)
-               elif isinstance(component , Entry):
-                    component.texture = pygame.transform.scale(textures[0] , component.rect.size)
      
      def event_handler(self , event : pygame.event.Event , offset=[0,0]):
           
@@ -207,6 +143,22 @@ class UI_panel():
                component.display(final_surface)
           
           surface.blit(final_surface , [self.rect.x , self.rect.y])
+
+class Settings_bar(UI_panel):
+     
+     def __init__(self, pos, size):
+          super().__init__(pos, size)
+     
+     def load_textures(self):
+          settings_textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
+          
+          settings_textures[0].fill([255, 166, 71, 0.25*128])
+          settings_textures[1].fill([255, 166, 71, 0.64*128])
+          settings_textures[2].fill([255, 166, 71, 0.9*128])
+          
+          for component in self.components.values():
+               if isinstance(component , Button):
+                    component.load_textures(settings_textures)
      
 
 class UI_panel_with_selectors():
@@ -221,15 +173,6 @@ class UI_panel_with_selectors():
           self.texture.fill([37, 44, 79])
           
           self.selectors["main tools"] = Button([0,0],[100 , 30],{"stringvalue":"Main tools","align center":True , "color":[255 , 255 , 255]})
-          
-          textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
-          
-          textures[0].fill([58, 42, 142, 0.25*128])
-          textures[1].fill([58, 42, 142, 0.64*128])
-          textures[2].fill([58, 42, 142, 0.9*128])
-          
-          for selector in self.selectors.values():
-               selector.load_textures(textures)
           
           self.panels["main tools"] = UI_panel([0 , 30] , [self.rect.width , self.rect.height - 30])
           self.actual_panels = self.panels["main tools"]
@@ -296,8 +239,24 @@ class UI_panel_with_selectors():
           
           self.panels["main tools"].components["button_undo"] = Button([850,0] , [50 , 30] , {"stringvalue":"undo","align center":True,"color":[255 , 255 , 255]})
           self.panels["main tools"].components["button_undo"].target = events.undo
+     
+     def load_textures(self):
+          textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
           
-          self.panels["main tools"].load_textures(textures)
+          textures[0].fill([58, 42, 142, 0.25*128])
+          textures[1].fill([58, 42, 142, 0.64*128])
+          textures[2].fill([58, 42, 142, 0.9*128])
+          
+          for selector in self.selectors.values():
+               selector.load_textures(textures)
+          
+          for component in self.panels["main tools"].components.values():
+               
+               if isinstance(component , Button):
+                    component.load_textures(textures)
+               elif isinstance(component , Entry):
+                    component.texture = pygame.transform.scale(textures[1] , component.rect.size)
+     
      
      def event_handler(self , event : pygame.event.Event):
           

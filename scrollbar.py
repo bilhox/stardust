@@ -98,12 +98,13 @@ class Scrollbar:
                     self.bar_rect.centerx =  scroll_length / (width_diff * 1.0) * (self.ts_diff * -1) + bar_half_length
                
      
-     def event_handler(self , event):
+     def event_handler(self , event , zone_offset=[0,0]):
           
           if not self.scrollbar_hid: 
                if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
-                         if self.bar_rect.collidepoint([event.pos[0]-self.panel_ref.rect.x , event.pos[1]-self.panel_ref.rect.y]):
+                         true_coord = Rect([self.bar_rect.x+self.panel_ref.rect.x+zone_offset[0] , self.bar_rect.y+self.panel_ref.rect.y+zone_offset[1]] , self.bar_rect.size)
+                         if true_coord.collidepoint(event.pos):
                               self.on_bar = True
                               self.mouse_diff = event.pos[0] - self.bar_rect.left if self.side else event.pos[1] - self.bar_rect.top
                if event.type == MOUSEBUTTONUP:

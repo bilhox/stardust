@@ -1,20 +1,23 @@
 import pygame
 import sys
 import events
+
 from ui import *
 from pygame.locals import *
 from panel import *
+from window import *
 
 class App():
      
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.5.2"
+          self.version = "V0.1.6"
           
           self.window_size = [900 , 600]
           
           self.panels = {}
+          self.windows = {}
           self.ui = {}
           
           self.screen = pygame.display.set_mode(self.window_size)
@@ -25,6 +28,7 @@ class App():
           pygame.display.set_icon(icon)
           
           self.is_window_open = False
+          self.current_window = None
      
      def Start(self):
           
@@ -32,44 +36,46 @@ class App():
           
           self.screen.fill([90 , 90 , 90])
           
-          self.panels["Img displayer"] = Img_displayer_panel([300 , 40] , [600 , 380])
-          self.panels["File manager"] = Window_panel([400 , 500])
+          self.panels["Img displayer"] = Img_displayer_panel([300 , 20] , [600 , 400])
+          self.windows["File manager"] = File_manager()
           self.panels["Tool panel"] = UI_panel_with_selectors([0 , 425],[900 , 175])
           
-          self.panels["File list"] = Image_list([0 , 40],[300 , 380])
+          self.panels["File list"] = Image_list([0 , 20],[300 , 400])
           self.panels["File list"].color = [18, 12, 54]
           
-          self.ui["label_of"] = Label([10 , 5] , 20 , {"stringValue":"Open file :"})
+          self.panels["settings bar"] = Settings_bar([0,0],[900 , 20])
+          self.panels["settings bar"].texture.fill([242, 160, 73])
           
-          self.ui["entry_img1"] = Entry("entry_img1" , [self.ui["label_of"].font.size(self.ui["label_of"].stringValue)[0] + 20 , 5] , [300 , 30])
-          self.ui["entry_img1"].default_text = "Enter img path :"
+          self.panels["settings bar"].components["button_addFile"] = Button( [0,0],[80 , 20],{"stringvalue":"open file","align center":True},self.windows["File manager"])
+          self.panels["settings bar"].components["button_addFile"].target = events.open_window
           
-          self.ui["button_addFile"] = Button( [self.ui["entry_img1"].rect.width + self.ui["entry_img1"].rect.x + 5 , 5],[40 , 30],{"stringvalue":"add","align center":True})
-          self.ui["button_addFile"].target = events.add_file
+          self.panels["settings bar"].load_textures()
+          self.panels["Tool panel"].load_textures()
+          self.windows["File manager"].load_textures()
      
      def events(self):
           for event in pygame.event.get():
                if event.type == QUIT:
                     pygame.quit()
                     sys.exit(0)
-               
-               for panel in self.panels.values():
                     
-                    if not self.is_window_open:
+               if(not self.is_window_open):
+                    for panel in self.panels.values():
                          panel.event_handler(event)
-                    else:
-                         if isinstance(panel , Window_panel):
-                              panel.event_handler(event)
                          
-               if not self.is_window_open:
                     for ui in self.ui.values():
                          ui.event_handler(event)
+               else:
+                    self.current_window.event_handler(event)
      
      def Update(self):
           
           self.events()
           
           self.panels["File list"].update()
+          
+          if self.current_window != None:
+               self.current_window.update()
           
           self.Display()
           pygame.display.flip()
@@ -85,9 +91,7 @@ class App():
                for ui in self.ui.values():
                     ui.display(self.screen)
           else:
-               for panel in self.panels.values():
-                    if isinstance(panel , Window_panel):
-                         panel.display(self.screen)
+               self.current_window.display(self.screen)
 
 def main():
      app = App()

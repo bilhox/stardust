@@ -186,7 +186,7 @@ class Button():
                final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           screen.blit(final_texture , [self.rect.x , self.rect.y])
 
-class Image_selector(Button):
+class File_selector(Button):
      
      def __init__(self, pos : tuple , size : tuple , stringValue : str , value):
           super().__init__(pos , size , stringValue , None)
@@ -195,6 +195,38 @@ class Image_selector(Button):
           
           self.selected = False
           self.value = value
+     
+     def event_handler(self, event: pygame.event.Event, button_zone_offset=[0, 0]):
+          
+          if event.type == MOUSEBUTTONDOWN and event.button == 1:
+               if self.rect.x + button_zone_offset[0] < event.pos[0] < self.rect.right + button_zone_offset[0] and self.rect.y + button_zone_offset[1] < event.pos[1] < self.rect.bottom + button_zone_offset[1]:
+                    if (self.value and self.target) != None:
+                         self.target(self.value)
+                    self.selected = True
+               else:
+                    self.selected = False
+                    self.case = 0
+                    
+          
+          if self.selected:
+               self.case = 2
+          else:
+               self.case = 0
+     
+     def display(self , screen):
+          
+          final_texture = self.textures[self.case].copy()
+          if self.align_center:
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+          else:
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+          
+          screen.blit(final_texture , [self.rect.x , self.rect.y])      
+
+class Image_selector(File_selector):
+     
+     def __init__(self, pos : tuple , size : tuple , stringValue : str , value):
+          super().__init__(pos , size , stringValue , value)
           
           self.delete_button = Button([self.rect.width - self.rect.height , 0],[self.rect.height]*2 , {"stringvalue":""} , self)
           self.delete_button.target = events.remove_ffl
@@ -212,16 +244,11 @@ class Image_selector(Button):
      
      def event_handler(self, event: pygame.event.Event, button_zone_offset=[0, 0]):
           
-          if event.type == MOUSEBUTTONDOWN and event.button == 1:
-               if self.rect.x + button_zone_offset[0] < event.pos[0] < self.rect.right + button_zone_offset[0] and self.rect.y + button_zone_offset[1] < event.pos[1] < self.rect.bottom + button_zone_offset[1]:
-                    self.target(self.value)
-                    if self.display_sb:
-                         self.delete_button.event_handler(event , [button_zone_offset[0]+self.rect.x , button_zone_offset[1]+self.rect.y])
-                         self.save_button.event_handler(event , [button_zone_offset[0]+self.rect.x , button_zone_offset[1]+self.rect.y])
-                    self.selected = True
-               else:
-                    self.selected = False
-                    self.case = 0
+          super().event_handler(event , button_zone_offset)
+          
+          if self.display_sb:
+               self.delete_button.event_handler(event , [button_zone_offset[0]+self.rect.x , button_zone_offset[1]+self.rect.y])
+               self.save_button.event_handler(event , [button_zone_offset[0]+self.rect.x , button_zone_offset[1]+self.rect.y])
                
                
                     
@@ -231,12 +258,6 @@ class Image_selector(Button):
                     self.display_sb = True
                else:
                     self.display_sb = False
-                    
-          
-          if self.selected:
-               self.case = 2
-          else:
-               self.case = 0
      
      def display(self , screen):
           
