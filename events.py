@@ -37,11 +37,16 @@ def search_files():
      try:
           path = app.current_window.components["entry_folderPath"].stringValue
           file_list = os.listdir(path)
+          image_list = []
+          
+          for file_path in file_list:
+               if os.path.splitext(file_path)[1].lower() in [".png" , ".jpg" , ".ppm" , ".pbm" , ".pgm"]:
+                    image_list.append(file_path)
           
           if len(app.current_window.components["FileList_fileFounded"].files) != 0:
                app.current_window.components["FileList_fileFounded"].files = []
           
-          for file in file_list:
+          for file in image_list:
                height = len(app.current_window.components["FileList_fileFounded"].files)
                selector = File_selector([0,height * 20],[app.current_window.components["FileList_fileFounded"].rect.width - 20 , 20],{"stringvalue":file , "padding left":20 , "color":[255 , 255 , 255]} , path+"\\"+file)
                
@@ -159,7 +164,7 @@ def pgm_conv():
 def pbm_conv():
      
      try:
-          int_conv = int(app.ui["entry_intConvPBM"].stringValue)
+          int_conv = int(app.panels["Tool panel"].panels["main tools"].components["entry_intConvPBM"].stringValue)
           image_data = Image.bitmap_conversion(app.panels["Img displayer"].img_displayer.image.image_data , int_conv)
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
@@ -168,7 +173,7 @@ def pbm_conv():
 def luminosity():
      
      try:
-          luminance = int(app.ui["entry_luminance"].stringValue)
+          luminance = int(app.panels["Tool panel"].panels["main tools"].components["entry_luminance"].stringValue)
           image_data = Image.luminosity(app.panels["Img displayer"].img_displayer.image.image_data , luminance)
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
@@ -177,7 +182,7 @@ def luminosity():
 def saturation():
      
      try:
-          int_saturation = int(app.ui["entry_saturation"].stringValue)
+          int_saturation = int(app.panels["Tool panel"].panels["main tools"].components["entry_saturation"].stringValue)
           image_data = Image.saturation(app.panels["Img displayer"].img_displayer.image.image_data , int_saturation)
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
@@ -188,6 +193,15 @@ def rotation():
      try:
           degree = int(app.ui["entry_rotation"].stringValue)
           image_data = Image.rotation(app.panels["Img displayer"].img_displayer.image.image_data , degree)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+     except:
+          pass
+
+def resize_image():
+     
+     try:
+          new_size = [int(app.panels["Tool panel"].panels["main tools"].components["entry_xSize"].stringValue) , int(app.panels["Tool panel"].panels["main tools"].components["ySize"].stringValue)]
+          image_data = traitement.resize_image(app.panels["Img displayer"].img_displayer.image.image_data , new_size)
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
