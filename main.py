@@ -12,7 +12,7 @@ class App():
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.6"
+          self.version = "V0.1.6.3"
           
           self.window_size = [900 , 600]
           
@@ -92,6 +92,7 @@ class App():
                     ui.display(self.screen)
           else:
                self.current_window.display(self.screen)
+               pygame.draw.line(self.screen, [255 , 0 , 0], [180 , 165], [180 , 165], 2)
 
 def main():
      app = App()

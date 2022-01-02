@@ -50,7 +50,7 @@ class Window:
                self.quit_button.event_handler(event , [self.rect.x , self.rect.y])
                
                for component in self.components.values():
-                    component.event_handler(event , [self.rect.x , self.rect.y + self.wb_rect.height])
+                    component.event_handler(event , [self.surface_rect.x , self.surface_rect.y])
      
      def display(self , surface : pygame.Surface):
           

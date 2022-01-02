@@ -7,9 +7,9 @@ from pygame.locals import *
 
 class SList():
      
-     def __init__(self , pos , size , offset=[0,0] , scrollbar_side=False):
+     def __init__(self , pos , size):
           
-          self.rect = Rect([pos[0]+offset[0] , pos[1]+offset[1]] , size)
+          self.rect = Rect([pos[0] , pos[1]] , size)
           
           self.color = [0,0,0]
           
@@ -42,9 +42,9 @@ class SList():
 
 class Image_list(SList):
      
-     def __init__(self , pos , size , offset=[0,0]):
+     def __init__(self , pos , size):
           
-          super().__init__(pos , size , offset)
+          super().__init__(pos , size)
           
           self.files = []
      
@@ -53,12 +53,11 @@ class Image_list(SList):
      
      def event_handler(self, event , offset=[0,0]):
           super().event_handler(event , offset)
-          
-          if event.type == (MOUSEBUTTONDOWN or MOUSEBUTTONUP) and not self.rect.collidepoint(event.pos):
+          true_rect = Rect([self.rect.x+offset[0] , self.rect.y+offset[1]],self.rect.size)
+          if event.type == (MOUSEBUTTONDOWN or MOUSEBUTTONUP) and not true_rect.collidepoint(event.pos):
                return
-          
           for selector in self.files:
-               selector.event_handler(event , [self.true_surface.get_rect().x+self.rect.x+offset[0] , self.rect.y+self.scrollbar_2.ts_diff+offset[1]])
+               selector.event_handler(event , [self.rect.x+offset[0] , self.rect.y+offset[1]+self.scrollbar_2.ts_diff])
                
 
      def display(self, surface):
@@ -69,7 +68,7 @@ class Image_list(SList):
           true_surface.fill(self.color)
           
           for index , selector in enumerate(self.files):
-               selector.rect.y = index * 20
+               # selector.rect.y = index * 20
                selector.display(true_surface)
           
           self.true_surface = true_surface

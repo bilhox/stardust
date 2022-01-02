@@ -196,10 +196,10 @@ class File_selector(Button):
           self.selected = False
           self.value = value
      
-     def event_handler(self, event: pygame.event.Event, button_zone_offset=[0, 0]):
-          
+     def event_handler(self, event: pygame.event.Event , button_zone_offset=[0, 0]):
           if event.type == MOUSEBUTTONDOWN and event.button == 1:
-               if self.rect.x + button_zone_offset[0] < event.pos[0] < self.rect.right + button_zone_offset[0] and self.rect.y + button_zone_offset[1] < event.pos[1] < self.rect.bottom + button_zone_offset[1]:
+               true_rect = Rect([self.rect.x+button_zone_offset[0],self.rect.y+button_zone_offset[1]],self.rect.size)
+               if true_rect.collidepoint(event.pos):
                     if (self.value and self.target) != None:
                          self.target(self.value)
                     self.selected = True
