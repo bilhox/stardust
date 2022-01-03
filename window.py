@@ -83,10 +83,11 @@ class File_manager(Window):
           self.set_title("File manager - Open file")
           
           self.components["entry_folderPath"] = Entry("entry_folderPath" , [5 , 50] , [450 , 30],[255 , 255 , 255])
+          self.components["entry_folderPath"].default_text = "enter path folder"
           self.components["button_folderPath"] = Button([460 , 50] , [85 , 30],{"stringvalue":"search","align center":True,"color":[255,255,255]})
           self.components["button_folderPath"].target = events.search_files
           
-          self.components["FileList_fileFounded"] = Image_list([5 , 85],[540,350])
+          self.components["FileList_fileFounded"] = Selector_list([5 , 85],[540,350])
           self.components["FileList_fileFounded"].color = [18, 12, 54]
           
           self.components["button_openFile"] = Button([460 , 440],[85 , 30],{"stringvalue":"open file","align center":True,"color":[255,255,255]})

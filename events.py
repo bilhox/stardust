@@ -64,39 +64,42 @@ def search_files():
      
 def add_file():
      image = Image([0,0])
+     
+     try:
+          selector = None
+          for select in app.current_window.components["FileList_fileFounded"].files:
+               if select.selected:
+                    selector = select
           
-     selector = None
-     for select in app.current_window.components["FileList_fileFounded"].files:
-          if select.selected:
-               selector = select
-     
-     if selector == None:
-          return
+          if selector == None:
+               return
+               
+          image.load(selector.value)
+          height = len(app.panels["File list"].files)
+          oc = ""
+          oc_number = 0
+          for select in app.panels["File list"].files:
+               if select.value.name == image.name:
+                    oc_number += 1
           
-     image.load(selector.value)
-     height = len(app.panels["File list"].files)
-     oc = ""
-     oc_number = 0
-     for select in app.panels["File list"].files:
-          if select.value.name == image.name:
-               oc_number += 1
-     
-     if oc_number != 0:
-          oc = f" ( {oc_number} )"
-     selector = Image_selector([0,height * 20],[app.panels["File list"].rect.width - 20 , 20],{"stringvalue":image.name+oc , "padding left":20 , "color":[255 , 255 , 255]} , image)
-     
-     textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
-     
-     textures[0].fill([18, 12, 54, 0])
-     textures[1].fill([58, 42, 142, 0.60*128])
-     textures[2].fill([58, 42, 142, 1*128])
-     
-     selector.load_textures(textures)
-     
-     selector.target = load_image
-     app.panels["File list"].files.append(selector)
-     
-     close_window(app.current_window)
+          if oc_number != 0:
+               oc = f" ( {oc_number} )"
+          selector = Image_selector([0,height * 20],[app.panels["File list"].rect.width - 20 , 20],{"stringvalue":image.name+oc , "padding left":20 , "color":[255 , 255 , 255]} , image)
+          
+          textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
+          
+          textures[0].fill([18, 12, 54, 0])
+          textures[1].fill([58, 42, 142, 0.60*128])
+          textures[2].fill([58, 42, 142, 1*128])
+          
+          selector.load_textures(textures)
+          
+          selector.target = load_image
+          app.panels["File list"].files.append(selector)
+          
+          close_window(app.current_window)
+     except:
+          pass
 
 
 def load_image(image):

@@ -69,7 +69,7 @@ class Image():
                if len(self.image_data_backup) == 5:
                     self.image_data_backup.pop(0)
           
-          self.image_data = image_data
+          self.image_data = image_data.copy()
           
           self.texture = pygame.Surface([self.image_data["meta"]["col"] , self.image_data["meta"]["lig"]])
           
