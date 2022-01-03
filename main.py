@@ -12,7 +12,7 @@ class App():
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.6.5"
+          self.version = "V0.1.6.6"
           
           self.window_size = [900 , 600]
           
@@ -124,8 +124,10 @@ class App():
           #filters preparation
           filter_tools = self.panels["Tool panel"].panels["filters"]
           
-          filter_tools.components["filter selector"] = Selector_list([0,0],[900 , filter_tools.rect.height],True)
+          filter_tools.components["filter selector"] = SList([0,0],[900 , filter_tools.rect.height],True)
           filter_tools.components["filter selector"].color = [18, 12, 54]
+          
+          filter_tools.components["filter selector"].true_surface = pygame.image.load("./imgs/nothing here.png").convert()
      
      def load_textures(self):
           self.panels["settings bar"].load_textures()
@@ -151,10 +153,11 @@ class App():
           
           self.events()
           
-          self.panels["File list"].update()
-          
           if self.current_window != None:
                self.current_window.update()
+          else:
+               self.panels["Tool panel"].panels["filters"].components["filter selector"].update()
+               self.panels["File list"].update()
           
           self.Display()
           pygame.display.flip()
