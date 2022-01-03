@@ -126,7 +126,7 @@ def sym_hori():
      
      try:
           image_data = Image.symHori(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
      except:
           pass
           
@@ -135,7 +135,7 @@ def sym_vert():
      
      try:
           image_data = Image.symVert(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
      except:
           pass
 
@@ -143,7 +143,7 @@ def rot_180():
      
      try:
           image_data = Image.rotation180(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
      except:
           pass
           
@@ -152,7 +152,7 @@ def rot_90():
      
      try:
           image_data = Image.rotation90(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
      except:
           pass
 
