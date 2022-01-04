@@ -186,10 +186,10 @@ class Button():
                final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           screen.blit(final_texture , [self.rect.x , self.rect.y])
 
-class File_selector(Button):
+class Selector(Button):
      
-     def __init__(self, pos : tuple , size : tuple , stringValue : str , value):
-          super().__init__(pos , size , stringValue , None)
+     def __init__(self, pos : tuple , size : tuple , stringParameter : dict , value):
+          super().__init__(pos , size , stringParameter , None)
           
           self.font = pygame.font.Font("./fonts/Readex_Pro/static/ReadexPro-Medium.ttf" , 12)
           
@@ -223,7 +223,7 @@ class File_selector(Button):
           
           screen.blit(final_texture , [self.rect.x , self.rect.y])      
 
-class Image_selector(File_selector):
+class Image_selector(Selector):
      
      def __init__(self, pos : tuple , size : tuple , stringValue : str , value):
           super().__init__(pos , size , stringValue , value)

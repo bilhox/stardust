@@ -1,6 +1,5 @@
 from math import *
 
-
 def red(image_data):
      
      new_pixtab = []

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import events
+import filters
 
 from ui import *
 from pygame.locals import *
@@ -12,7 +13,7 @@ class App():
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.6.7"
+          self.version = "V0.1.7.1"
           
           self.window_size = [900 , 600]
           
@@ -118,16 +119,18 @@ class App():
           main_tools.components["entry_ySize"].max_lenght = 4
           main_tools.components["entry_ySize"].extra_string = "px" 
           
-          main_tools.components["button_undo"] = Button([850,0] , [50 , 30] , {"stringvalue":"undo","align center":True,"color":[255 , 255 , 255]})
-          main_tools.components["button_undo"].target = events.undo
+          # main_tools.components["button_undo"] = Button([850,0] , [50 , 30] , {"stringvalue":"undo","align center":True,"color":[255 , 255 , 255]})
+          # main_tools.components["button_undo"].target = events.undo
           
           #filters preparation
           filter_tools = self.panels["Tool panel"].panels["filters"]
           
-          filter_tools.components["filter selector"] = SList([0,0],[900 , filter_tools.rect.height],True)
-          filter_tools.components["filter selector"].color = [18, 12, 54]
+          filter_tools.components["filter selector"] = Filter_selector([0,0],[900 , filter_tools.rect.height])
+          filter_selector = filter_tools.components["filter selector"]
+          filter_selector.color = [18, 12, 54]
           
-          filter_tools.components["filter selector"].true_surface = pygame.image.load("./imgs/nothing here.png").convert()
+          filter_selector.add_filter(filters.red , "Red filter")
+
      
      def load_textures(self):
           self.panels["settings bar"].load_textures()

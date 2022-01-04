@@ -220,15 +220,18 @@ def resize_image(image_data , size : list):
     width = size[0]
     height = size[1]
     
-    new_pix = []
+    new_pix = [0]*height
     
+    # Variable qui correspond au coef d'aggrandissement / rétrécissement => [coef_x , coef_y]
     coef = [width / image_data["meta"]["col"] , height / image_data["meta"]["lig"]]
-    print(coef)
     
-    
-    if coef[1] >= 1:
-        for y , line in enumerate(image_data["pix"]):
-            
+    # itération dans chaque ligne du tableau
+    for y , line in enumerate(image_data["pix"]):
+        
+        if coef[1] >= 1:
+            #Si le coef est supérieur ou égal à 1 alors :
+            # - Calcul des coordonées du début du pixel et de sa fin (On arrondi à l'entier le plus proche)
+            # - Comme ça , si end_y - new_y est égal à 2 ou plus , on ajoute une deux fois le pixel , soit deux fois la ligne
             new_y = ceil(y*coef[1]) if (y*coef[1]) % 1 >= 0.5 else floor(y*coef[1])
             end_y = ceil((y+1)*coef[1]) if ((y+1)*coef[1]) % 1 >= 0.5 else floor((y+1)*coef[1])
             
@@ -241,6 +244,9 @@ def resize_image(image_data , size : list):
                 for x , pixel in enumerate(line):
                     
                     if coef[0] >= 1:
+                        #Si le coef est supérieur ou égal à 1 alors :
+                        # - Calcul des coordonées du début du pixel et de sa fin (On arrondi à l'entier le plus proche)
+                        # - Comme ça , si end_x - new_x est égal à 2 ou plus , on ajoute une deux fois le pixel , soit deux fois la ligne
                         new_x = ceil(x*coef[0]) if (x*coef[0]) % 1 >= 0.5 else floor(x*coef[0])
                         end_x = ceil((x+1)*coef[0]) if ((x+1)*coef[0]) % 1 >= 0.5 else floor((x+1)*coef[0])
                         
@@ -250,18 +256,57 @@ def resize_image(image_data , size : list):
                             ligne[new_x+i] = pixel
                     
                     else:
+                        # Si le coef est inférieur à 1 alors:
+                        # - Calcul des coordonées du pixel
+                        # - Si plusieurs pixels ont les mêmes coordonées , alors on fait leur moyenne
+                        # Pour ce cas si , le tableau de pixel est déjà préremplis avec des 0
+                        # Si la valeur n'est pas 0 , donc un pixel , alors on fait la moyenne avec le pixel en attente d'être ajouter
                         new_x = floor(x*coef[0])
-                        end_x = ceil((x+1)*coef[0]) if ((x+1)*coef[0]) % 1 >= 0.5 else floor((x+1)*coef[0])
                         
                         if ligne[new_x] != 0:
                             pix = ligne[new_x]
                             ligne[new_x] = [(pix[0]+pixel[0])//2,(pix[1]+pixel[1])//2,(pix[1]+pixel[1])//2]
                         else:
                             ligne[new_x] = pixel
-                        
-                        
             
-                new_pix.append(ligne)
+                new_pix[new_y+h] = ligne
+            
+        else:
+            # Si le coef est inférieur à 1 alors:
+            # - Calcul des coordonées du pixel
+            # - Si plusieurs pixels ont les mêmes coordonées , alors on fait leur moyenne
+            # Pour ce cas si , le tableau de pixel est déjà préremplis avec des 0
+            # Si la valeur n'est pas 0 , donc une ligne de pixel , alors on fait la moyenne en itérant dans la ligne
+            new_y = floor(y*coef[1])
+                   
+            ligne = [0]*width
+            
+            for x , pixel in enumerate(line):
+                
+                if coef[0] >= 1:
+                    new_x = ceil(x*coef[0]) if (x*coef[0]) % 1 >= 0.5 else floor(x*coef[0])
+                    end_x = ceil((x+1)*coef[0]) if ((x+1)*coef[0]) % 1 >= 0.5 else floor((x+1)*coef[0])
+                    
+                    lenght_xPix = end_x - new_x
+                    
+                    for i in range(lenght_xPix):
+                        ligne[new_x+i] = pixel
+                
+                else:
+                    new_x = floor(x*coef[0])
+                    end_x = ceil((x+1)*coef[0]) if ((x+1)*coef[0]) % 1 >= 0.5 else floor((x+1)*coef[0])
+                    
+                    if ligne[new_x] != 0:
+                        pix = ligne[new_x]
+                        ligne[new_x] = [(pix[0]+pixel[0])//2,(pix[1]+pixel[1])//2,(pix[1]+pixel[1])//2]
+                    else:
+                        ligne[new_x] = pixel
+                
+            if new_pix[new_y] != 0:
+                for index , pix in enumerate(new_pix[new_y]):
+                    new_pix[new_y][index] = [(pix[0]+ligne[index][0])//2,(pix[1]+ligne[index][1])//2,(pix[1]+ligne[index][1])//2]
+            else:
+                new_pix[new_y] = ligne       
         
     final_image_data = image_data.copy()
     final_image_data["meta"]["lig"] = height

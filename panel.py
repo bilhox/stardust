@@ -1,5 +1,6 @@
 import pygame
 import scrollbar
+import events
 
 from ui import *
 from image import *
@@ -46,7 +47,8 @@ class Selector_list(SList):
           
           super().__init__(pos , size , scrollbar_side)
           
-          self.files = []
+          self.selectors = []
+          self.selector_size = 20
      
      def update(self):
           super().update()
@@ -56,22 +58,22 @@ class Selector_list(SList):
           true_rect = Rect([self.rect.x+offset[0] , self.rect.y+offset[1]],self.rect.size)
           if event.type == (MOUSEBUTTONDOWN or MOUSEBUTTONUP) and not true_rect.collidepoint(event.pos):
                return
-          for selector in self.files:
+          for selector in self.selectors:
                selector.event_handler(event , [self.rect.x+offset[0] , self.rect.y+offset[1]+self.scrollbar.ts_diff] if not self.scrollbar.side else [self.rect.x+offset[0]+self.scrollbar.ts_diff , self.rect.y+offset[1]])
                
 
      def display(self, surface):
           
-          tsh = len(self.files) * 20
+          tsh = len(self.selectors) * self.selector_size
           
           true_surface = pygame.Surface([self.rect.width , tsh])
           true_surface.fill(self.color)
           
-          for index , selector in enumerate(self.files):
+          for index , selector in enumerate(self.selectors):
                if not self.scrollbar.side:
-                    selector.rect.y = index * 20
+                    selector.rect.y = index * self.selector_size
                else:
-                    selector.rect.x = index * 20
+                    selector.rect.x = index * self.selector_size
                selector.display(true_surface)
           
           self.true_surface = true_surface
@@ -223,6 +225,28 @@ class UI_panel_with_selectors():
                self.actual_panel.display(final_surface)
           
           surface.blit(final_surface , [self.rect.x , self.rect.y])
+
+class Filter_selector(Selector_list):
+     
+     def __init__(self, pos, size):
+          super().__init__(pos, size, True)
+
+          self.selector_size = 150
+     
+     def add_filter(self , filter_function , name):
+          
+          selector = Button([len(self.selectors)*150,0],[150 , self.rect.height-20],{"stringvalue":name,"align center":True},filter_function)
+          selector.target = events.filter
+          self.selectors.append(selector)
+     
+     def update(self):
+          return super().update()
+     
+     def event_handler(self, event, offset=[0, 0]):
+          return super().event_handler(event, offset=offset)
+     
+     def display(self, surface):
+          return super().display(surface)
 
 
           
