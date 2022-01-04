@@ -1,5 +1,6 @@
 import pygame
 import traitement
+import filters
 
 from ui import *
 from image import *
@@ -177,7 +178,7 @@ def luminosity():
      
      try:
           luminance = int(app.panels["Tool panel"].panels["main tools"].components["entry_luminance"].stringValue)
-          image_data = Image.luminosity(app.panels["Img displayer"].img_displayer.image.image_data , luminance)
+          image_data = filters.red(app.panels["Img displayer"].img_displayer.image.image_data , luminance)
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
@@ -202,12 +203,9 @@ def rotation():
 
 def resize_image():
      
-     try:
-          new_size = [int(app.panels["Tool panel"].panels["main tools"].components["entry_xSize"].stringValue) , int(app.panels["Tool panel"].panels["main tools"].components["ySize"].stringValue)]
-          image_data = traitement.resize_image(app.panels["Img displayer"].img_displayer.image.image_data , new_size)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
-     except:
-          pass
+     new_size = [int(app.panels["Tool panel"].panels["main tools"].components["entry_xSize"].stringValue) , int(app.panels["Tool panel"].panels["main tools"].components["entry_ySize"].stringValue)]
+     image_data = traitement.resize_image(app.panels["Img displayer"].img_displayer.image.image_data , new_size)
+     app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
 
 def extend(package):
      

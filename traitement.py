@@ -215,3 +215,58 @@ def rotation(image_data , degree):
     final_image_data["meta"]["lig"] = size[1]
     
     return final_image_data
+
+def resize_image(image_data , size : list):
+    width = size[0]
+    height = size[1]
+    
+    new_pix = []
+    
+    coef = [width / image_data["meta"]["col"] , height / image_data["meta"]["lig"]]
+    print(coef)
+    
+    
+    if coef[1] >= 1:
+        for y , line in enumerate(image_data["pix"]):
+            
+            new_y = ceil(y*coef[1]) if (y*coef[1]) % 1 >= 0.5 else floor(y*coef[1])
+            end_y = ceil((y+1)*coef[1]) if ((y+1)*coef[1]) % 1 >= 0.5 else floor((y+1)*coef[1])
+            
+            lenght_yPix = end_y - new_y
+            
+            for h in range(lenght_yPix):
+                    
+                ligne = [0]*width
+                
+                for x , pixel in enumerate(line):
+                    
+                    if coef[0] >= 1:
+                        new_x = ceil(x*coef[0]) if (x*coef[0]) % 1 >= 0.5 else floor(x*coef[0])
+                        end_x = ceil((x+1)*coef[0]) if ((x+1)*coef[0]) % 1 >= 0.5 else floor((x+1)*coef[0])
+                        
+                        lenght_xPix = end_x - new_x
+                        
+                        for i in range(lenght_xPix):
+                            ligne[new_x+i] = pixel
+                    
+                    else:
+                        new_x = floor(x*coef[0])
+                        end_x = ceil((x+1)*coef[0]) if ((x+1)*coef[0]) % 1 >= 0.5 else floor((x+1)*coef[0])
+                        
+                        if ligne[new_x] != 0:
+                            pix = ligne[new_x]
+                            ligne[new_x] = [(pix[0]+pixel[0])//2,(pix[1]+pixel[1])//2,(pix[1]+pixel[1])//2]
+                        else:
+                            ligne[new_x] = pixel
+                        
+                        
+            
+                new_pix.append(ligne)
+        
+    final_image_data = image_data.copy()
+    final_image_data["meta"]["lig"] = height
+    final_image_data["meta"]["col"] = width
+    final_image_data["pix"] = new_pix
+    
+    return final_image_data            
+            

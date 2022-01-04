@@ -68,7 +68,10 @@ class Selector_list(SList):
           true_surface.fill(self.color)
           
           for index , selector in enumerate(self.files):
-               selector.rect.y = index * 20
+               if not self.scrollbar.side:
+                    selector.rect.y = index * 20
+               else:
+                    selector.rect.x = index * 20
                selector.display(true_surface)
           
           self.true_surface = true_surface
