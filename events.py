@@ -9,8 +9,11 @@ from pygame.locals import *
 app = None
 
 def filter(filter_function):
-     image_data = filter_function(app.panels["Img displayer"].img_displayer.image.image_data)
-     app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , True)
+     try:
+          image_data = filter_function(app.panels["Img displayer"].img_displayer.image.image_data)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , True)
+     except:
+          pass
 
 def open_window(window):
      

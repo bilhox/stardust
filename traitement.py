@@ -141,6 +141,11 @@ def luminosity(image_data , intensity : int):
     
     new_pixtab = []
     
+    if intensity > 100:
+        intensity = 100
+    elif intensity < 0:
+        intensity = 0
+    
     for y in image_data["pix"]:
         ligne = []
         for pixel in y:
@@ -164,7 +169,7 @@ def saturation(image_data , intensity : int):
     if intensity > 100:
         intensity = 100
     elif intensity < 0:
-        intensity = 100
+        intensity = 0
     
     for y in image_data["pix"]:
         ligne = []

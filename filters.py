@@ -19,6 +19,77 @@ def red(image_data):
      
      return final_image_data
 
+def blue(image_data):
+     
+     new_pixtab2 = []
+
+     for y in image_data["pix"]:
+          ligne = []
+          for pixel in y:
+               new_rgb = (110, pixel[1], pixel[2])
+               ligne.append(new_rgb)
+          new_pixtab2.append(ligne)
+
+     final_image_data = image_data.copy()
+     final_image_data["pix"] = new_pixtab2
+
+     final_image_data["meta"]["mod"] = "Filter blue"
+     return final_image_data
+          
+
+def pink(image_data):
+
+     new_pixtab3 = []
+
+     for y in image_data["pix"]:
+          ligne = []
+          for pixel in y:
+              new_rgb = (pixel[1], 110, 125,)
+              ligne.append(new_rgb)
+          new_pixtab3.append(ligne)
+
+     final_image_data = image_data.copy()
+     final_image_data["pix"] = new_pixtab3
+
+     final_image_data["meta"]["mod"] = "Filter pink"
+     return final_image_data
+
+
+def greenPurple(image_data):
+
+     new_pixtab4 = []
+
+     for y in image_data["pix"]:
+          ligne = []
+          for pixel in y:
+              new_rgb = (110, pixel[1], 150)
+              ligne.append(new_rgb)
+          new_pixtab4.append(ligne)
+
+     final_image_data = image_data.copy()
+     final_image_data["pix"] = new_pixtab4
+
+     final_image_data["meta"]["mod"] = "Filter blue2"
+     return final_image_data
+
+
+def greenBrown(image_data):
+
+     new_pixtab4 = []
+
+     for y in image_data["pix"]:
+          ligne = []
+          for pixel in y:
+              new_rgb = (90, pixel[1], 17)
+              ligne.append(new_rgb)
+          new_pixtab4.append(ligne)
+
+     final_image_data = image_data.copy()
+     final_image_data["pix"] = new_pixtab4
+
+     final_image_data["meta"]["mod"] = "Filter brown"
+     return final_image_data
+
 def contour(image_data):
      
      new_pixtab = []
@@ -36,10 +107,10 @@ def contour(image_data):
                     c = image_data["pix"][y+1][x-1][0]
                     d = image_data["pix"][y-1][x+1][0]
                else:
-                    a = int((a[0]+a[1]+a[2])/3)*3
-                    b = int((b[0]+b[1]+b[2])/3)*3
-                    c = int((c[0]+c[1]+c[2])/3)*3
-                    d = int((d[0]+d[1]+d[2])/3)*3
+                    a = int((a[0]+a[1]+a[2])/3)
+                    b = int((b[0]+b[1]+b[2])/3)
+                    c = int((c[0]+c[1]+c[2])/3)
+                    d = int((d[0]+d[1]+d[2])/3)
                
                diff = (a-b)**2+(c-d)**2
                if diff < 10000:

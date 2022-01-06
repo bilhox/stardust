@@ -13,7 +13,7 @@ class App():
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.9.2"
+          self.version = "V0.2"
           
           self.window_size = [900 , 600]
           
@@ -130,6 +130,10 @@ class App():
           filter_selector.color = [18, 12, 54]
           
           filter_selector.add_filter(filters.red , "Red filter")
+          filter_selector.add_filter(filters.blue , "blue filter")
+          filter_selector.add_filter(filters.pink , "Pink filter")
+          filter_selector.add_filter(filters.greenBrown , "Green/Brown filter")
+          filter_selector.add_filter(filters.greenPurple , "Green/Purple filter")
           filter_selector.add_filter(filters.contour , "contours")
 
      
