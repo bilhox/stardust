@@ -299,3 +299,14 @@ class Img_displayer():
                image = pygame.transform.scale(self.image.texture, [self.image.rect.width*self.zooms[self.zoom] , self.image.rect.height*self.zooms[self.zoom]])
                final_surface.blit(image , [self.rect.width // 2 - image.get_rect().width // 2 , self.rect.height // 2 - image.get_rect().height // 2 ])
           surface.blit(final_surface , [self.rect.x , self.rect.y])
+
+class Bcolors:
+     HEADER = '\033[95m'
+     OKBLUE = '\033[94m'
+     OKCYAN = '\033[96m'
+     OKGREEN = '\033[92m'
+     WARNING = '\033[93m'
+     FAIL = '\033[91m'
+     ENDC = '\033[0m'
+     BOLD = '\033[1m'
+     UNDERLINE = '\033[4m'

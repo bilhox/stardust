@@ -1,8 +1,8 @@
 import pygame
 import events
 import pyperclip
-import os
 import data
+import image
 
 from pygame.locals import *
 
@@ -176,7 +176,7 @@ class Button():
                except:
                     pass
           else:
-               print("OOOOO - "+button_key+" not in datas")
+               print(image.Bcolors.WARNING + "00 WARNING 00 - "+button_key+" not in datas" + image.Bcolors.ENDC)
           
           if main_texture == None:
                return
@@ -188,8 +188,6 @@ class Button():
                texture.blit(main_texture,[0,0])
                if logo != None:
                     texture.blit(logo , [4,4])
-          
-          print(button_key)
           
      def change_background_color(self , colors):
           

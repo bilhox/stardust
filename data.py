@@ -48,6 +48,10 @@ imgs = {
           "delete":{
                "texture":"./imgs/source/logos/logo delete.png",
                "logo":""
+          },
+          "undo":{
+               "texture":"./imgs/source/logos/logo undo button.png",
+               "logo":""
           }
      }
 }

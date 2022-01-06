@@ -13,7 +13,7 @@ class App():
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.9.1"
+          self.version = "V0.1.9.2"
           
           self.window_size = [900 , 600]
           
@@ -118,9 +118,9 @@ class App():
           main_tools.components["entry_ySize"].default_text = "Y - pixel"   
           main_tools.components["entry_ySize"].max_lenght = 4
           main_tools.components["entry_ySize"].extra_string = "px" 
-          
-          # main_tools.components["button_undo"] = Button([850,0] , [50 , 30] , {"stringvalue":"undo","align center":True,"color":[255 , 255 , 255]})
-          # main_tools.components["button_undo"].target = events.undo
+     
+          main_tools.components["button_undo"] = Button("undo",[860,105] , [40 , 40] , {"stringvalue":"","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_undo"].target = events.undo
           
           #filters preparation
           filter_tools = self.panels["Tool panel"].panels["filters"]
