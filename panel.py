@@ -1,6 +1,7 @@
 import pygame
 import scrollbar
 import events
+import data
 
 from ui import *
 from image import *
@@ -154,15 +155,11 @@ class Settings_bar(UI_panel):
           super().__init__(pos, size)
      
      def load_textures(self):
-          settings_textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
-          
-          settings_textures[0].fill([255, 166, 71, 0.25*128])
-          settings_textures[1].fill([255, 166, 71, 0.64*128])
-          settings_textures[2].fill([255, 166, 71, 0.9*128])
+          colors = [[255, 166, 71, 0.25*128],[255, 166, 71, 0.64*128],[255, 166, 71, 0.9*128]]
           
           for component in self.components.values():
                if isinstance(component , Button):
-                    component.load_textures(settings_textures)
+                    component.change_background_color(colors)
      
 
 class UI_panel_with_selectors():
@@ -179,29 +176,20 @@ class UI_panel_with_selectors():
           self.actual_panel = None
           
      def create_panel(self , name : str):
-          selector = Button([len(self.selectors)*100,0],[100 , 30],{"stringvalue":name,"align center":True , "color":[255 , 255 , 255]} , target_arguments=name)
+          selector = Button(name,[len(self.selectors)*100,0],[100 , 30],{"stringvalue":name,"align center":True , "color":[255 , 255 , 255]} , target_arguments=name)
           selector.target = self.set_panel
           self.selectors.append(selector)
           self.panels[name] = UI_panel([0 , 30] , [self.rect.width , self.rect.height - 30])
      
      def load_textures(self):
-          textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
           
-          textures[0].fill([58, 42, 142, 0.25*128])
-          textures[1].fill([58, 42, 142, 0.64*128])
-          textures[2].fill([58, 42, 142, 0.9*128])
-          
-          for selector in self.selectors:
-               selector.load_textures(textures)
-          
-          for panel in self.panels.values():
+          for panel_name , panel in self.panels.items():
                
-               for component in panel.components.values():
-               
+               for name , component in panel.components.items():
+                    
                     if isinstance(component , Button):
-                         component.load_textures(textures)
-                    elif isinstance(component , Entry):
-                         component.texture = pygame.transform.scale(textures[1] , component.rect.size)
+                         pass
+          
      
      def set_panel(self , name):
           self.actual_panel = self.panels[name]
@@ -235,7 +223,7 @@ class Filter_selector(Selector_list):
      
      def add_filter(self , filter_function , name):
           
-          selector = Button([len(self.selectors)*150,0],[150 , self.rect.height-20],{"stringvalue":name,"align center":True},filter_function)
+          selector = Button(f"filter{len(self.selectors)}",[len(self.selectors)*150,0],[150 , self.rect.height-20],{"stringvalue":name,"align center":True,"color":[255,255,255]},filter_function)
           selector.target = events.filter
           self.selectors.append(selector)
      

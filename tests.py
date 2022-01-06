@@ -1,42 +1,42 @@
 
-import pygame
-import sys
-import panel
+# import pygame
+# import sys
+# import panel
 
-from pygame.locals import *
+# from pygame.locals import *
 
-screen = pygame.display.set_mode([600 , 400])
-panel_example = panel.SList([0 , 0],[200,300])
+# screen = pygame.display.set_mode([600 , 400])
+# panel_example = panel.SList([0 , 0],[200,300])
 
-random_surface = pygame.Surface([400 , 600])
-random_surface.fill([138, 28, 28])
+# random_surface = pygame.Surface([400 , 600])
+# random_surface.fill([138, 28, 28])
 
-surf_2 = pygame.Surface([20 , 600])
-surf_2.fill([138, 238, 28])
+# surf_2 = pygame.Surface([20 , 600])
+# surf_2.fill([138, 238, 28])
 
-surf_3 = pygame.Surface([20 , 600])
-surf_3.fill([18, 212, 28])
+# surf_3 = pygame.Surface([20 , 600])
+# surf_3.fill([18, 212, 28])
 
-random_surface.blit(surf_2 , [0,0])
-random_surface.blit(surf_3 , [350,0])
+# random_surface.blit(surf_2 , [0,0])
+# random_surface.blit(surf_3 , [350,0])
 
-panel_example.true_surface = random_surface
+# panel_example.true_surface = random_surface
 
-while True:
+# while True:
      
-     screen.fill([20 , 20 , 20])
+#      screen.fill([20 , 20 , 20])
      
-     for event in pygame.event.get():
-          if event.type == QUIT:
-               pygame.quit()
-               sys.exit()
-          panel_example.event_handler(event)
+#      for event in pygame.event.get():
+#           if event.type == QUIT:
+#                pygame.quit()
+#                sys.exit()
+#           panel_example.event_handler(event)
      
-     panel_example.update()
+#      panel_example.update()
      
-     panel_example.display(screen)
+#      panel_example.display(screen)
      
-     pygame.display.flip()
+#      pygame.display.flip()
 
 # # class Foo():
      

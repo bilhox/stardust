@@ -2,7 +2,7 @@ import pygame
 import events
 import pyperclip
 import os
-import support
+import data
 
 from pygame.locals import *
 
@@ -39,8 +39,8 @@ class Entry:
           self.name = name
           
           self.rect = Rect(pos , size)
-          self.texture = pygame.Surface(size)
-          self.texture.fill([160 , 160 , 160])
+          self.texture = pygame.Surface(size , SRCALPHA)
+          self.texture.fill([58, 42, 142, 0.64*128])
           
           self.stringValue = ""
           self.writing = False
@@ -112,6 +112,10 @@ class Entry:
           elif 0 > self.cursor:
                self.cursor += 1
      
+     def change_background_color(self , color):
+          
+          self.texture.fill(color)
+     
      def display(self , screen):
           
           final_surf = self.texture.copy()
@@ -127,35 +131,76 @@ class Entry:
 
 class Button():
      
-     def __init__(self, pos : tuple , size : tuple , stringParameter : dict , target_arguments=None):
+     def __init__(self , name : str , pos : tuple , size : tuple , stringParameter : dict , target_arguments=None):
           
           self.rect = Rect(pos , size)
-          self.textures = [pygame.Surface(self.rect.size),pygame.Surface(self.rect.size),pygame.Surface(self.rect.size)]
+          self.textures = [pygame.Surface(self.rect.size , SRCALPHA),pygame.Surface(self.rect.size , SRCALPHA),pygame.Surface(self.rect.size , SRCALPHA)]
           
-          self.textures[2].fill([100 , 100 , 100])
-          self.textures[1].fill([230 , 230 , 230])
-          self.textures[0].fill([150 , 150 , 150])
+          self.textures[0].fill([58, 42, 142, 0.25*128])
+          self.textures[1].fill([58, 42, 142, 0.64*128])
+          self.textures[2].fill([58, 42, 142, 0.9*128])
           
           self.target = None
           self.font = pygame.font.Font("./fonts/Readex_Pro/static/ReadexPro-Medium.ttf", 14)
           
           self.align_center = stringParameter["align center"] if "align center" in stringParameter else False
-          self.padding_left = stringParameter["padding left"] if "padding left" in stringParameter else 0
+          
+          padd_left = stringParameter["padding left"] if "padding left" in stringParameter else 0
+          padd_top = stringParameter["padding top"] if "padding top" in stringParameter else 0
+          
+          self.padding = [padd_left , padd_top]
           self.color = stringParameter["color"] if "color" in stringParameter else [0,0,0]
           self.stringValue = stringParameter["stringvalue"]
+          self.name = name
           self.case = 0
           self.target_arguments = target_arguments
           
-          self.hover_timer = 0
-          self.event_time = 20
-          self.display_hc = False
-          self.hover_content = ""
+          self.main_texture = None
+          self.logo = None
           
-     def load_textures(self , textures):
+          self.load_textures()
           
-          for index in range(len(self.textures)):
-               self.textures[index] = pygame.transform.scale(textures[index] , self.rect.size)
-
+     def load_textures(self):
+          
+          button_key = self.name
+          main_texture = None
+          logo = None
+          if button_key in data.imgs["button"]:
+               try:
+                    main_texture = pygame.image.load(data.imgs["button"][button_key]["texture"]).convert_alpha()
+                    if data.imgs["button"][button_key]["logo"] != "":
+                         try:
+                              logo = pygame.image.load(data.imgs["button"][button_key]["logo"]).convert_alpha()
+                         except:
+                              pass
+               except:
+                    pass
+          else:
+               print("OOOOO - "+button_key+" not in datas")
+          
+          if main_texture == None:
+               return
+          
+          self.main_texture = main_texture
+          self.logo = logo
+          
+          for texture in self.textures:
+               texture.blit(main_texture,[0,0])
+               if logo != None:
+                    texture.blit(logo , [4,4])
+          
+          print(button_key)
+          
+     def change_background_color(self , colors):
+          
+          a = 0
+          for texture in self.textures:
+               texture.fill(colors[a])
+               if self.main_texture != None:
+                    texture.blit(self.main_texture , [0,0])
+                    if self.logo != None:
+                         texture.blit(self.logo , [0,0])
+               a+=1
                
           
      def event_handler(self , event : pygame.event.Event , button_zone_offset=[0,0]):
@@ -180,16 +225,19 @@ class Button():
      def display(self , screen):
           
           final_texture = self.textures[self.case].copy()
-          if self.align_center:
+          if self.align_center or (self.padding[0] == 0 and self.padding[1] == 0):
                final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           else:
-               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+               x_dist = self.padding[0] if self.padding[0] != 0 else self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2
+               y_dist = self.padding[1] if self.padding[1] != 0 else self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2
+               
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [x_dist , y_dist])
           screen.blit(final_texture , [self.rect.x , self.rect.y])
 
 class Selector(Button):
      
-     def __init__(self, pos : tuple , size : tuple , stringParameter : dict , value):
-          super().__init__(pos , size , stringParameter , None)
+     def __init__(self, name : str, pos : tuple , size : tuple , stringParameter : dict , value):
+          super().__init__(name , pos , size , stringParameter , None)
           
           self.font = pygame.font.Font("./fonts/Readex_Pro/static/ReadexPro-Medium.ttf" , 12)
           
@@ -211,34 +259,22 @@ class Selector(Button):
           if self.selected:
                self.case = 2
           else:
-               self.case = 0
-     
-     def display(self , screen):
-          
-          final_texture = self.textures[self.case].copy()
-          if self.align_center:
-               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
-          else:
-               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
-          
-          screen.blit(final_texture , [self.rect.x , self.rect.y])      
+               self.case = 0   
 
 class Image_selector(Selector):
      
-     def __init__(self, pos : tuple , size : tuple , stringValue : str , value):
-          super().__init__(pos , size , stringValue , value)
+     def __init__(self, name : str , pos : tuple , size : tuple , stringValue : str , value):
+          super().__init__(name , pos , size , stringValue , value)
           
-          self.delete_button = Button([self.rect.width - self.rect.height , 0],[self.rect.height]*2 , {"stringvalue":""} , self)
+          self.delete_button = Button("delete",[self.rect.width - self.rect.height , 0],[self.rect.height]*2 , {"stringvalue":""} , self)
           self.delete_button.target = events.remove_ffl
+
+          self.delete_button.change_background_color([[200 , 200 , 200 , 20]]*3)
           
-          self.delete_button.textures = [pygame.Surface([self.rect.height]*2 , SRCALPHA)]*3
-          self.delete_button.textures[0].fill([200 , 200 , 200 , 20])
-          
-          self.save_button = Button([self.rect.width - self.rect.height*2 , 0],[self.rect.height]*2 , {"stringvalue":""})
+          self.save_button = Button("save",[self.rect.width - self.rect.height*2 , 0],[self.rect.height]*2 , {"stringvalue":""})
           self.save_button.target = self.value.save
           
-          self.save_button.textures = [pygame.Surface([self.rect.height]*2 , SRCALPHA)]*3
-          self.save_button.textures[0].fill([200 , 200 , 200 , 20])
+          self.save_button.change_background_color([[200 , 200 , 200 , 20]]*3)
           
           self.display_sb = False
      
@@ -265,7 +301,10 @@ class Image_selector(Selector):
           if self.align_center:
                final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2 , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
           else:
-               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [self.padding_left , self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2])
+               x_dist = self.padding[0] if self.padding[0] != 0 else self.rect.width // 2 - self.font.size(self.stringValue)[0] // 2
+               y_dist = self.padding[1] if self.padding[1] != 0 else self.rect.height // 2 - self.font.size(self.stringValue)[1] // 2
+               
+               final_texture.blit(self.font.render(self.stringValue , True , self.color) , [x_dist , y_dist])
           
           if self.display_sb:
                self.delete_button.display(final_texture)

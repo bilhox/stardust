@@ -23,7 +23,7 @@ class Window:
           
           self.rect = Rect(pos , [self.wb_rect.width+self.surface_rect.width,self.wb_rect.height+self.surface_rect.height])
           
-          self.quit_button = Button([self.wb_rect.width - 45 , 0],[45 , 30],{"stringvalue":"X","align center":True} , target_arguments=self)
+          self.quit_button = Button("quit_window",[self.wb_rect.width - 45 , 0],[45 , 30],{"stringvalue":"X","align center":True} , target_arguments=self)
           self.quit_button.target = events.close_window
           
           self.title_label = Label([20 , 2] , 20 , {"stringValue":self.title,"color":[255 , 255 , 255]})
@@ -84,13 +84,13 @@ class File_manager(Window):
           
           self.components["entry_folderPath"] = Entry("entry_folderPath" , [5 , 50] , [450 , 30],[255 , 255 , 255])
           self.components["entry_folderPath"].default_text = "enter path folder"
-          self.components["button_folderPath"] = Button([460 , 50] , [85 , 30],{"stringvalue":"search","align center":True,"color":[255,255,255]})
+          self.components["button_folderPath"] = Button("fp_search",[460 , 50] , [85 , 30],{"stringvalue":"search","align center":True,"color":[255,255,255]})
           self.components["button_folderPath"].target = events.search_files
           
           self.components["FileList_fileFounded"] = Selector_list([5 , 85],[540,350])
           self.components["FileList_fileFounded"].color = [18, 12, 54]
           
-          self.components["button_openFile"] = Button([460 , 440],[85 , 30],{"stringvalue":"open file","align center":True,"color":[255,255,255]})
+          self.components["button_openFile"] = Button("openFile",[460 , 440],[85 , 30],{"stringvalue":"open file","align center":True,"color":[255,255,255]})
           self.components["button_openFile"].target = events.add_file
           
           self.surface_color = [14, 9, 41]
@@ -101,16 +101,12 @@ class File_manager(Window):
      
      def load_textures(self):
           
-          textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
+          texture = pygame.Surface([1,1] , SRCALPHA)
           
-          textures[0].fill([58, 42, 142, 0.25*128])
-          textures[1].fill([58, 42, 142, 0.64*128])
-          textures[2].fill([58, 42, 142, 0.9*128])
+          texture.fill([58, 42, 142, 0.64*128])
           
           for component in self.components.values():
                
-               if isinstance(component , Button):
-                    component.load_textures(textures)
-               elif isinstance(component , Entry):
-                    component.texture = pygame.transform.scale(textures[1] , component.rect.size)
+               if isinstance(component , Entry):
+                    component.texture = pygame.transform.scale(texture , component.rect.size)
      

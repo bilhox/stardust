@@ -40,9 +40,21 @@ class Image():
           else:
                self.texture = pygame.image.load(self.path)
                self.texture.convert_alpha()
-               self.image_data["readable"] = False
-               
+               self.image_data["meta"]["extra_infos"] = "PNG or JPEG file to PPM file"
+               self.image_data["meta"]["extension"] = ".ppm"
                self.rect = self.texture.get_rect()
+               self.image_data["meta"]["col"] = self.rect.w
+               self.image_data["meta"]["lig"] = self.rect.h
+               
+               pix_tab = []
+               
+               for y in range(self.rect.h):
+                    line = []
+                    for x in range(self.rect.w):
+                         line.append(self.texture.get_at([x , y]))
+                    pix_tab.append(line)
+               
+               self.image_data["pix"] = pix_tab
                self.rect.x , self.rect.y = self.pos[0] , self.pos[1]
                
                self.image_loaded = True

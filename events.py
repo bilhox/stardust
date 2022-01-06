@@ -9,11 +9,8 @@ from pygame.locals import *
 app = None
 
 def filter(filter_function):
-     try:
-          image_data = filter_function(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , True)
-     except:
-          pass
+     image_data = filter_function(app.panels["Img displayer"].img_displayer.image.image_data)
+     app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , True)
 
 def open_window(window):
      
@@ -56,15 +53,7 @@ def search_files():
           
           for file in image_list:
                height = len(app.current_window.components["FileList_fileFounded"].selectors)
-               selector = Selector([0,height * 20],[app.current_window.components["FileList_fileFounded"].rect.width - 20 , 20],{"stringvalue":file , "padding left":20 , "color":[255 , 255 , 255]} , path+"\\"+file)
-               
-               textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
-               
-               textures[0].fill([18, 12, 54, 0])
-               textures[1].fill([58, 42, 142, 0.60*128])
-               textures[2].fill([58, 42, 142, 1*128])
-               
-               selector.load_textures(textures)
+               selector = Selector(f"fileFounded-{file}",[0,height * 20],[app.current_window.components["FileList_fileFounded"].rect.width - 20 , 20],{"stringvalue":file , "padding left":20 , "color":[255 , 255 , 255]} , path+"\\"+file)
                
                app.current_window.components["FileList_fileFounded"].selectors.append(selector)
      except:
@@ -92,15 +81,7 @@ def add_file():
           
           if oc_number != 0:
                oc = f" ( {oc_number} )"
-          selector = Image_selector([0,height * 20],[app.panels["File list"].rect.width - 20 , 20],{"stringvalue":image.name+oc , "padding left":20 , "color":[255 , 255 , 255]} , image)
-          
-          textures = [pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1] , SRCALPHA),pygame.Surface([1,1]) , SRCALPHA]
-          
-          textures[0].fill([18, 12, 54, 0])
-          textures[1].fill([58, 42, 142, 0.60*128])
-          textures[2].fill([58, 42, 142, 1*128])
-          
-          selector.load_textures(textures)
+          selector = Image_selector(f"img-{image.name}",[0,height * 20],[app.panels["File list"].rect.width - 20 , 20],{"stringvalue":image.name+oc , "padding left":20 , "color":[255 , 255 , 255]} , image)
           
           selector.target = load_image
           app.panels["File list"].selectors.append(selector)
@@ -120,7 +101,7 @@ def remove_ffl(selector):
      index = app.panels["File list"].selectors.index(selector)
      app.panels["File list"].selectors.remove(selector)
      
-     if app.panels["File list"].files == []:
+     if app.panels["File list"].selectors == []:
           app.panels["Img displayer"].img_displayer.image = Image([0,0])
      else :
           try:
@@ -202,7 +183,7 @@ def saturation():
 def rotation():
      
      try:
-          degree = int(app.ui["entry_rotation"].stringValue)
+          degree = int(app.panels["Tool panel"].panels["main tools"].components["entry_rotation"].stringValue)
           image_data = traitement.rotation(app.panels["Img displayer"].img_displayer.image.image_data , degree)
           app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:

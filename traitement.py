@@ -184,35 +184,63 @@ def saturation(image_data , intensity : int):
 
 def rotation(image_data , degree):
     
+    center = [image_data["meta"]["col"] // 2 , image_data["meta"]["lig"] // 2]
+    
+    y_tab = []
+    x_tab = []
+    pix_dict = {}
+    
+    for y , line in enumerate(image_data["pix"]):
+        
+        for x , pixel in enumerate(line):
+            
+            x_centered = (x - center[0])
+            y_centered = (y - center[1])
+            
+            new_x = x_centered*cos(radians(degree))-y_centered*sin(radians(degree)) + center[0]
+            new_y = x_centered*sin(radians(degree))+y_centered*cos(radians(degree)) + center[1]
+            
+            new_x = ceil(new_x) if new_x % 1 >= 0.5 else floor(new_x)
+            new_y = ceil(new_y) if new_y % 1 >= 0.5 else floor(new_y)
+            
+            y_tab.append(new_y)
+            x_tab.append(new_x)
+            pix_dict[f"{new_x};{new_y}"] = pixel
+            # print(new_x+center[0],new_y+center[1])
+    
+    # print(pix_dict)
     pixtab = []
-    center = [image_data["meta"]["lig"] // 2 , image_data["meta"]["col"] // 2]
+
+    b = True
     
-    size = [0,0]
-    
-    for y , ligne in enumerate(image_data["pix"]):
+    for y in range(image_data["meta"]["lig"]):
         
-        for x , pixel in enumerate(ligne):
-            
-            new_coord = [int((center[0] - x) * cos(degree)) , int((center[1] - y) * sin(degree))]
-            pixtab.append({"rgb":pixel , "coord":new_coord})
-            
-            if new_coord[1] > size[1]:
-                size[1] = new_coord[1]
-            elif new_coord[0] > size[0]:
-                size[0] = new_coord[0]
-    
-    new_pix = [[0]*size[0]]*size[1]
-    
-    for pixel_data in pixtab:
+        line = []
         
-        print(pixel_data["coord"][1],pixel_data["coord"][0])
-        new_pix[pixel_data["coord"][1]][pixel_data["coord"][0]] = pixel_data["rgb"]
+        for x in range(image_data["meta"]["col"]):
+            
+            if f"{x};{y}" in pix_dict:
+                b = True
+                line.append(pix_dict[f"{x};{y}"])
+            elif b == True and f"{x-1};{y}" in pix_dict:
+                if  f"{x+1};{y}" in pix_dict:
+                    before_pix = pix_dict[f"{x-1};{y}"]
+                    after_pix = pix_dict[f"{x+1};{y}"]
+                    pixel = [int((before_pix[0]+after_pix[0])/2),int((before_pix[1]+after_pix[1])/2),int((before_pix[2]+after_pix[2])/2)]
+                    line.append(pixel)
+                else:    
+                    line.append(pix_dict[f"{x-1};{y}"])
+                b = False
+            else:
+                line.append([0,0,0])
+            
+        pixtab.append(line)
+                
+                
     
     final_image_data = image_data.copy()
-    final_image_data["pix"] = new_pix
+    final_image_data["pix"] = pixtab
     final_image_data["meta"]["mod"]="Rotation"
-    final_image_data["meta"]["col"] = size[0]
-    final_image_data["meta"]["lig"] = size[1]
     
     return final_image_data
 

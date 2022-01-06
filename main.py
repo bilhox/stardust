@@ -13,7 +13,7 @@ class App():
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.1.7.1"
+          self.version = "V0.1.9.1"
           
           self.window_size = [900 , 600]
           
@@ -46,7 +46,7 @@ class App():
           self.panels["settings bar"] = Settings_bar([0,0],[900 , 20])
           self.panels["settings bar"].texture.fill([242, 160, 73])
           
-          self.panels["settings bar"].components["button_addFile"] = Button( [0,0],[80 , 20],{"stringvalue":"open file","align center":True},self.windows["File manager"])
+          self.panels["settings bar"].components["button_addFile"] = Button("addFile",[0,0],[80 , 20],{"stringvalue":"open file","align center":True},self.windows["File manager"])
           self.panels["settings bar"].components["button_addFile"].target = events.open_window
           
           #Tool panel components
@@ -59,62 +59,62 @@ class App():
           
           # main tools preparation
           main_tools = self.panels["Tool panel"].panels["main tools"]
-          main_tools.components["button_SymHori"] = Button([10, 5] , [200 , 30] , {"stringvalue":"Horizontal symmetry","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_SymHori"] = Button("SymHori",[10, 5] , [150 , 40] , {"stringvalue":"Hor. sym","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_SymHori"].target = events.sym_hori
           
-          main_tools.components["button_SymVert"] = Button([10,40] , [200 , 30] , {"stringvalue":"Vertical symmetry","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_SymVert"] = Button("SymVert",[10,50] , [150 , 40] , {"stringvalue":"Vert. sym","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_SymVert"].target = events.sym_vert
 
-          main_tools.components["button_rot180"] = Button([10,75] , [200 , 30] , {"stringvalue":"Rotation 180°","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_rot180"] = Button("rot180",[165,50] , [150 , 40] , {"stringvalue":"Rot. 180°","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_rot180"].target = events.rot_180
           
-          main_tools.components["button_rot90"] = Button([10,110] , [200 , 30] , {"stringvalue":"Rotation 90°","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_rot90"] = Button("rot90",[165,5] , [150 , 40] , {"stringvalue":"Rot. 90°","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_rot90"].target = events.rot_90
           
-          main_tools.components["button_convPGM"] = Button([240,5] , [120 , 30] , {"stringvalue":"To PGM","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_convPGM"] = Button("convPGM",[165,95] , [150 , 40] , {"stringvalue":"To PGM","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_convPGM"].target = events.pgm_conv
           
-          main_tools.components["button_convPBM"] = Button([240,40] , [120 , 30] , {"stringvalue":"To PBM :","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_convPBM"] = Button("convPBM",[350,95] , [150 , 40] , {"stringvalue":"To PBM :","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_convPBM"].target = events.pbm_conv  
           
-          main_tools.components["entry_intConvPBM"] =  Entry("entry_intConvPBM", [370 , 40] , [120 , 30] , [255 , 255 , 255])
-          main_tools.components["entry_intConvPBM"].default_text = "Intensity - %"   
+          main_tools.components["entry_intConvPBM"] =  Entry("entry_intConvPBM", [505 , 95] , [75 , 40] , [255 , 255 , 255])
+          main_tools.components["entry_intConvPBM"].default_text = "Int - %"   
           main_tools.components["entry_intConvPBM"].max_lenght = 3
           main_tools.components["entry_intConvPBM"].extra_string = "%" 
           
-          main_tools.components["button_lum"] = Button([240,75] , [120 , 30] , {"stringvalue":"brightness :","align center":True,"color":[255 , 255 , 255]})
-          main_tools.components["button_lum"].target = events.luminosity
+          main_tools.components["button_brightness"] = Button("brightness",[350,5] , [150 , 40] , {"stringvalue":"brightness :","padding left":60,"color":[255 , 255 , 255]})
+          main_tools.components["button_brightness"].target = events.luminosity
           
-          main_tools.components["entry_luminance"] =  Entry("entry_luminance", [370 , 75] , [120 , 30] , [255 , 255 , 255])
-          main_tools.components["entry_luminance"].default_text = "Luminance - %"   
+          main_tools.components["entry_luminance"] =  Entry("entry_luminance", [505 , 5] , [75 , 40] , [255 , 255 , 255])
+          main_tools.components["entry_luminance"].default_text = "Lum - %"   
           main_tools.components["entry_luminance"].max_lenght = 3
           main_tools.components["entry_luminance"].extra_string = "%" 
           
-          main_tools.components["button_saturation"] = Button([240,110] , [120 , 30] , {"stringvalue":"saturate :","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_saturation"] = Button("saturation",[350,50] , [150 , 40] , {"stringvalue":"saturate :","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_saturation"].target = events.saturation
           
-          main_tools.components["entry_saturation"] =  Entry("entry_saturation", [370 , 110] , [120 , 30] , [255 , 255 , 255])
-          main_tools.components["entry_saturation"].default_text = "saturation - %"   
+          main_tools.components["entry_saturation"] =  Entry("entry_saturation", [505 , 50] , [75 , 40] , [255 , 255 , 255])
+          main_tools.components["entry_saturation"].default_text = "sat - %"   
           main_tools.components["entry_saturation"].max_lenght = 3
           main_tools.components["entry_saturation"].extra_string = "%" 
           
-          main_tools.components["button_rotation"] = Button([520,5] , [120 , 30] , {"stringvalue":"rotate :","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_rotation"] = Button("rotation",[610,5] , [150 , 40] , {"stringvalue":"rotate :","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_rotation"].target = events.rotation
           
-          main_tools.components["entry_rotation"] =  Entry("entry_rotation", [650 , 5] , [120 , 30] , [255 , 255 , 255])
-          main_tools.components["entry_rotation"].default_text = "rotation - °"   
+          main_tools.components["entry_rotation"] =  Entry("entry_rotation", [765 , 5] , [75 , 40] , [255 , 255 , 255])
+          main_tools.components["entry_rotation"].default_text = "rot - °"   
           main_tools.components["entry_rotation"].max_lenght = 3
           main_tools.components["entry_rotation"].extra_string = "°" 
           
-          main_tools.components["button_resize"] = Button([520,50] , [120 , 30] , {"stringvalue":"resize :","align center":True,"color":[255 , 255 , 255]})
+          main_tools.components["button_resize"] = Button("resize",[610,50] , [150 , 40] , {"stringvalue":"resize :","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_resize"].target = events.resize_image
           
-          main_tools.components["entry_xSize"] =  Entry("entry_xSize", [650 , 50] , [120 , 30] , [255 , 255 , 255])
+          main_tools.components["entry_xSize"] =  Entry("entry_xSize", [765 , 50] , [75 , 40] , [255 , 255 , 255])
           main_tools.components["entry_xSize"].default_text = "X - pixel"   
           main_tools.components["entry_xSize"].max_lenght = 4
           main_tools.components["entry_xSize"].extra_string = "px" 
           
-          main_tools.components["entry_ySize"] =  Entry("entry_ySize", [650 , 85] , [120 , 30] , [255 , 255 , 255])
+          main_tools.components["entry_ySize"] =  Entry("entry_ySize", [765 , 95] , [75 , 40] , [255 , 255 , 255])
           main_tools.components["entry_ySize"].default_text = "Y - pixel"   
           main_tools.components["entry_ySize"].max_lenght = 4
           main_tools.components["entry_ySize"].extra_string = "px" 
@@ -130,6 +130,7 @@ class App():
           filter_selector.color = [18, 12, 54]
           
           filter_selector.add_filter(filters.red , "Red filter")
+          filter_selector.add_filter(filters.contour , "contours")
 
      
      def load_textures(self):
@@ -177,7 +178,6 @@ class App():
                     ui.display(self.screen)
           else:
                self.current_window.display(self.screen)
-               pygame.draw.line(self.screen, [255 , 0 , 0], [180 , 165], [180 , 165], 2)
 
 def main():
      app = App()
