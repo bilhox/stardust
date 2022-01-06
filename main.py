@@ -13,7 +13,7 @@ class App():
      def __init__(self):
           
           self.name = "Stardust"
-          self.version = "V0.2"
+          self.version = "V0.2.2"
           
           self.window_size = [900 , 600]
           

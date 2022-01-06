@@ -44,7 +44,7 @@ def pink(image_data):
      for y in image_data["pix"]:
           ligne = []
           for pixel in y:
-              new_rgb = (pixel[1], 110, 125,)
+              new_rgb = (pixel[1], 110, 125)
               ligne.append(new_rgb)
           new_pixtab3.append(ligne)
 
@@ -102,11 +102,12 @@ def contour(image_data):
                c = image_data["pix"][y+1][x-1]
                d = image_data["pix"][y-1][x+1]
                if image_data["meta"]["extension"] in [".pgm",".pbm"]:
-                    a = image_data["pix"][y-1][x-1][0]
-                    b = image_data["pix"][y+1][x+1][0]
-                    c = image_data["pix"][y+1][x-1][0]
-                    d = image_data["pix"][y-1][x+1][0]
+                    a = a[0]
+                    b = b[0]
+                    c = c[0]
+                    d = d[0]
                else:
+                    
                     a = int((a[0]+a[1]+a[2])/3)
                     b = int((b[0]+b[1]+b[2])/3)
                     c = int((c[0]+c[1]+c[2])/3)
