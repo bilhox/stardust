@@ -1,6 +1,7 @@
 from math import *
 from decimal import *
 from image import *
+from copy import deepcopy
 
 def symHori(image_data):
     """
@@ -17,7 +18,7 @@ def symHori(image_data):
     for y in range(lig-1, -1, -1):
         newpix.append(pix[y])
 
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     final_image_data["pix"] = newpix
     final_image_data["meta"]["mod"]="Symétrie horizontale"
     return final_image_data
@@ -29,9 +30,7 @@ def symVert(image_data):
                          "pix" : [(255, 255, 255), (253, 0, 34), (233, 0, 0), ...]}
     :return: img
     """
-    col = image_data["meta"]["col"]
-    lig = image_data["meta"]["lig"]
-    pix = image_data["pix"]
+    pix = deepcopy(image_data["pix"])
 
     newpix = []
 
@@ -39,7 +38,7 @@ def symVert(image_data):
         li.reverse()
         newpix.append(li)
         
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     
     final_image_data["pix"] = newpix
     final_image_data["meta"]["mod"]="Symétrie verticale"
@@ -53,16 +52,9 @@ def rotation180(image_data):
                          "pix" : [(255, 255, 255), (253, 0, 34), (233, 0, 0), ...]}
     :return: img
     """
-    col = image_data["meta"]["col"]
-    lig = image_data["meta"]["lig"]
-    pix = image_data["pix"]
-
-    newpix = []
 
     img2 = symHori(image_data)
     img2 = symVert(img2)
-    # newpix.append(img2)
-
 
     img2["meta"]["mod"]="Rotation a 180 degrès"
     return img2
@@ -77,7 +69,7 @@ def rotation90(image_data):
   
     col = image_data["meta"]["col"]
     lig = image_data["meta"]["lig"]
-    pix = image_data["pix"]
+    pix = deepcopy(image_data["pix"])
 
     newpix = []
 
@@ -87,7 +79,7 @@ def rotation90(image_data):
             ligne.append(pix[y][x])
         newpix.append(ligne)
 
-    final_img_data = image_data.copy()
+    final_img_data = deepcopy(image_data)
 
     final_img_data["pix"] = newpix
     final_img_data["meta"]["mod"]="Rotation a 90 degrès"
@@ -107,7 +99,7 @@ def conversion_ppm_en_pgm(image_data : dict):
         
         tab.append(ligne)
     
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     final_image_data["pix"] = tab
     final_image_data["meta"]["extension"] = ".pgm"
     final_image_data["meta"]["mod"]="Conversion to pgm"
@@ -130,7 +122,7 @@ def bitmap_conversion(image_data , intensity : int):
         
         tab.append(ligne) 
     
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     final_image_data["pix"] = tab
     final_image_data["meta"]["extension"] = ".pbm"
     final_image_data["meta"]["mod"]="Conversion to pbm"
@@ -155,7 +147,7 @@ def luminosity(image_data , intensity : int):
             ligne.append(new_rgb)
         new_pixtab.append(ligne)
     
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     final_image_data["pix"] = new_pixtab
     
     final_image_data["meta"]["mod"]="Brightness modification"
@@ -180,7 +172,7 @@ def saturation(image_data , intensity : int):
             ligne.append(new_rgb)
         new_pixtab.append(ligne)
     
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     final_image_data["pix"] = new_pixtab
     
     final_image_data["meta"]["mod"]="Saturation modification"
@@ -243,7 +235,7 @@ def rotation(image_data , degree):
                 
                 
     
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     final_image_data["pix"] = pixtab
     final_image_data["meta"]["mod"]="Rotation"
     
@@ -341,7 +333,7 @@ def resize_image(image_data , size : list):
             else:
                 new_pix[new_y] = ligne       
         
-    final_image_data = image_data.copy()
+    final_image_data = deepcopy(image_data)
     final_image_data["meta"]["lig"] = height
     final_image_data["meta"]["col"] = width
     final_image_data["pix"] = new_pix

@@ -4,6 +4,7 @@ import support
 
 from math import *
 from pygame.locals import *
+from copy import deepcopy
 
 
 class Image():
@@ -77,11 +78,11 @@ class Image():
      def load_by_data(self , image_data : dict , save=True):
           
           if save:
-               self.image_data_backup.append(self.image_data.copy())
-               if len(self.image_data_backup) == 5:
+               self.image_data_backup.append(deepcopy(self.image_data))
+               if len(self.image_data_backup) == 10:
                     self.image_data_backup.pop(0)
           
-          self.image_data = image_data.copy()
+          self.image_data = deepcopy(image_data)
           
           self.texture = pygame.Surface([self.image_data["meta"]["col"] , self.image_data["meta"]["lig"]])
           

@@ -11,7 +11,7 @@ app = None
 def filter(filter_function):
      try:
           image_data = filter_function(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , True)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
 
@@ -118,7 +118,7 @@ def sym_hori():
      
      try:
           image_data = traitement.symHori(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
           
@@ -127,7 +127,7 @@ def sym_vert():
      
      try:
           image_data = traitement.symVert(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
 
@@ -135,7 +135,7 @@ def rot_180():
      
      try:
           image_data = traitement.rotation180(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
           
@@ -144,7 +144,7 @@ def rot_90():
      
      try:
           image_data = traitement.rotation90(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data , False)
+          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
      except:
           pass
 

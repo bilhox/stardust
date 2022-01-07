@@ -12,7 +12,7 @@ def red(image_data):
                ligne.append(new_rgb)
           new_pixtab.append(ligne)
      
-     final_image_data = image_data.copy()
+     final_image_data = deepcopy(image_data)
      final_image_data["pix"] = new_pixtab
      
      final_image_data["meta"]["mod"]="Filter red"
@@ -21,17 +21,17 @@ def red(image_data):
 
 def blue(image_data):
      
-     new_pixtab2 = []
+     new_pixtab = []
 
      for y in image_data["pix"]:
           ligne = []
           for pixel in y:
                new_rgb = (110, pixel[1], pixel[2])
                ligne.append(new_rgb)
-          new_pixtab2.append(ligne)
+          new_pixtab.append(ligne)
 
-     final_image_data = image_data.copy()
-     final_image_data["pix"] = new_pixtab2
+     final_image_data = deepcopy(image_data)
+     final_image_data["pix"] = new_pixtab
 
      final_image_data["meta"]["mod"] = "Filter blue"
      return final_image_data
@@ -39,17 +39,17 @@ def blue(image_data):
 
 def pink(image_data):
 
-     new_pixtab3 = []
+     new_pixtab = []
 
      for y in image_data["pix"]:
           ligne = []
           for pixel in y:
               new_rgb = (pixel[1], 110, 125)
               ligne.append(new_rgb)
-          new_pixtab3.append(ligne)
+          new_pixtab.append(ligne)
 
-     final_image_data = image_data.copy()
-     final_image_data["pix"] = new_pixtab3
+     final_image_data = deepcopy(image_data)
+     final_image_data["pix"] = new_pixtab
 
      final_image_data["meta"]["mod"] = "Filter pink"
      return final_image_data
@@ -57,17 +57,17 @@ def pink(image_data):
 
 def greenPurple(image_data):
 
-     new_pixtab4 = []
+     new_pixtab = []
 
      for y in image_data["pix"]:
           ligne = []
           for pixel in y:
               new_rgb = (110, pixel[1], 150)
               ligne.append(new_rgb)
-          new_pixtab4.append(ligne)
+          new_pixtab.append(ligne)
 
-     final_image_data = image_data.copy()
-     final_image_data["pix"] = new_pixtab4
+     final_image_data = deepcopy(image_data)
+     final_image_data["pix"] = new_pixtab
 
      final_image_data["meta"]["mod"] = "Filter blue2"
      return final_image_data
@@ -75,17 +75,17 @@ def greenPurple(image_data):
 
 def greenBrown(image_data):
 
-     new_pixtab4 = []
+     new_pixtab = []
 
      for y in image_data["pix"]:
           ligne = []
           for pixel in y:
               new_rgb = (90, pixel[1], 17)
               ligne.append(new_rgb)
-          new_pixtab4.append(ligne)
+          new_pixtab.append(ligne)
 
-     final_image_data = image_data.copy()
-     final_image_data["pix"] = new_pixtab4
+     final_image_data = deepcopy(image_data)
+     final_image_data["pix"] = new_pixtab
 
      final_image_data["meta"]["mod"] = "Filter brown"
      return final_image_data
@@ -129,7 +129,7 @@ def contour(image_data):
           line.insert(0 , [0,0,0])
           line.insert(image_data["meta"]["col"]-1 , [0,0,0])
      
-     final_image_data = image_data.copy()
+     final_image_data = deepcopy(image_data)
      final_image_data["pix"] = new_pixtab
      
      return final_image_data
