@@ -8,7 +8,7 @@ This program was made with the 3.10 version of python and the 2.1 version of pyg
 If the program don't execute , be sure the good module versions are installed .<br />
 This program use also other modules which can be downloaded by running the bat file : "module_installation".<br />
 The project is subject to the license "Creative Commons Zero" .<br />
-This project was made by Théo , Leila , Bilel and Valentin , students in the high school.<br />
+This project was made by Théo , Leila , Bilel and Valentin , high school students.<br />
 
 ###### Version française : 
 
