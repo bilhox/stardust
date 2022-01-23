@@ -1,17 +1,17 @@
 import pygame
 import traitement
-import filters
 
 from ui import *
 from image import *
+from window import *
 from pygame.locals import *
 
 app = None
 
 def filter(filter_function):
      try:
-          image_data = filter_function(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = filter_function(app.panels["Img displayer"].image.image_data)
+          app.panels["Img displayer"].image.load_by_data(image_data)
      except:
           pass
 
@@ -22,6 +22,7 @@ def open_window(window):
      
      app.screen.blit(filtre , [0,0])
      
+     window.start()
      window.opened = True
      app.is_window_open = True
      app.current_window = window
@@ -35,8 +36,8 @@ def close_window(window):
 
 def undo():
      try:
-          backup = app.panels["Img displayer"].img_displayer.image.image_data_backup.pop()
-          app.panels["Img displayer"].img_displayer.image.load_by_data(backup , False)
+          backup = app.panels["Img displayer"].image.image_data_backup.pop()
+          app.panels["Img displayer"].image.load_by_data(backup , False)
      except:
           pass
 
@@ -96,8 +97,8 @@ def add_file():
 
 def load_image(image):
      
-     app.panels["Img displayer"].img_displayer.image = image 
-     app.panels["Img displayer"].img_displayer.resize()
+     app.panels["Img displayer"].image = image 
+     app.panels["Img displayer"].resize()
 
 def remove_ffl(selector):
      
@@ -105,20 +106,20 @@ def remove_ffl(selector):
      app.panels["File list"].selectors.remove(selector)
      
      if app.panels["File list"].selectors == []:
-          app.panels["Img displayer"].img_displayer.image = Image([0,0])
+          app.panels["Img displayer"].image = Image([0,0])
      else :
           try:
-               app.panels["Img displayer"].img_displayer.image = app.panels["File list"].selectors[index].value
-               app.panels["Img displayer"].img_displayer.resize()
+               app.panels["Img displayer"].image = app.panels["File list"].selectors[index].value
+               app.panels["Img displayer"].resize()
           except:
-               app.panels["Img displayer"].img_displayer.image = app.panels["File list"].selectors[index - 1].value
-               app.panels["Img displayer"].img_displayer.resize()
+               app.panels["Img displayer"].image = app.panels["File list"].selectors[index - 1].value
+               app.panels["Img displayer"].resize()
 
 def sym_hori():
      
      try:
-          image_data = traitement.symHori(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.symHori(app.panels["Img displayer"].image.image_data)
+          app.panels["Img displayer"].image.load_by_data(image_data)
      except:
           pass
           
@@ -126,16 +127,16 @@ def sym_hori():
 def sym_vert():
      
      try:
-          image_data = traitement.symVert(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.symVert(app.panels["Img displayer"].image.image_data)
+          app.panels["Img displayer"].image.load_by_data(image_data)
      except:
           pass
 
 def rot_180():
      
      try:
-          image_data = traitement.rotation180(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.rotation180(app.panels["Img displayer"].image.image_data)
+          app.panels["Img displayer"].image.load_by_data(image_data)
      except:
           pass
           
@@ -143,52 +144,52 @@ def rot_180():
 def rot_90():
      
      try:
-          image_data = traitement.rotation90(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.rotation90(app.panels["Img displayer"].image.image_data)
+          app.panels["Img displayer"].image.load_by_data(image_data)
      except:
           pass
 
 def pgm_conv():
      
      try:
-          image_data = traitement.conversion_ppm_en_pgm(app.panels["Img displayer"].img_displayer.image.image_data)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.conversion_ppm_en_pgm(app.panels["Img displayer"].image.image_data)
+          app.panels["Img displayer"].image.load_by_data(image_data)
      except:
           pass
 
-def pbm_conv():
+def pbm_conv(value,img_displayer,window):
      
      try:
-          int_conv = int(app.panels["Tool panel"].panels["main tools"].components["entry_intConvPBM"].stringValue)
-          image_data = traitement.bitmap_conversion(app.panels["Img displayer"].img_displayer.image.image_data , int_conv)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.bitmap_conversion(img_displayer.image.image_data , value)
+          img_displayer.image.load_by_data(image_data)
+          pygame.event.post(pygame.event.Event(Window.WINDOW_CLOSED, {"window":window}))
      except:
           pass
 
-def luminosity():
+def luminosity(value , img_displayer , window):
      
      try:
-          luminance = int(app.panels["Tool panel"].panels["main tools"].components["entry_luminance"].stringValue)
-          image_data = traitement.luminosity(app.panels["Img displayer"].img_displayer.image.image_data , luminance)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.luminosity(img_displayer.image.image_data , value)
+          img_displayer.image.load_by_data(image_data)
+          pygame.event.post(pygame.event.Event(Window.WINDOW_CLOSED, {"window":window}))
      except:
           pass
 
-def saturation():
+def saturation(value , img_displayer , window):
      
      try:
-          int_saturation = int(app.panels["Tool panel"].panels["main tools"].components["entry_saturation"].stringValue)
-          image_data = traitement.saturation(app.panels["Img displayer"].img_displayer.image.image_data , int_saturation)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.saturation(img_displayer.image.image_data , value)
+          img_displayer.image.load_by_data(image_data)
+          pygame.event.post(pygame.event.Event(Window.WINDOW_CLOSED, {"window":window}))
      except:
           pass
      
-def rotation():
+def rotation(value , img_displayer , window):
      
      try:
-          degree = int(app.panels["Tool panel"].panels["main tools"].components["entry_rotation"].stringValue)
-          image_data = traitement.rotation(app.panels["Img displayer"].img_displayer.image.image_data , degree)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.rotation(img_displayer.image.image_data , value)
+          img_displayer.image.load_by_data(image_data)
+          pygame.event.post(pygame.event.Event(Window.WINDOW_CLOSED, {"window":window}))
      except:
           pass
 
@@ -196,8 +197,8 @@ def resize_image():
      
      try:
           new_size = [int(app.panels["Tool panel"].panels["main tools"].components["entry_xSize"].stringValue) , int(app.panels["Tool panel"].panels["main tools"].components["entry_ySize"].stringValue)]
-          image_data = traitement.resize_image(app.panels["Img displayer"].img_displayer.image.image_data , new_size)
-          app.panels["Img displayer"].img_displayer.image.load_by_data(image_data)
+          image_data = traitement.resize_image(app.panels["Img displayer"].image.image_data , new_size)
+          app.panels["Img displayer"].image.load_by_data(image_data)
      except:
           pass
 def extend(package):

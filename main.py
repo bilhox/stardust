@@ -37,8 +37,30 @@ class App():
           
           self.screen.fill([90 , 90 , 90])
           
-          self.panels["Img displayer"] = Img_displayer_panel([300 , 20] , [600 , 400])
+          self.panels["Img displayer"] = Img_displayer([300 , 20] , [600 , 400])
           self.windows["File manager"] = File_manager()
+          
+          self.windows["PBM conversion"] = RC_window(self.panels["Img displayer"])
+          self.windows["PBM conversion"].set_title("PBM conversion")
+          self.windows["PBM conversion"].traitement = traitement.bitmap_conversion
+          self.windows["PBM conversion"].components["button_applyChanges"].target = events.pbm_conv
+          
+          self.windows["Saturation"] = RC_window(self.panels["Img displayer"])
+          self.windows["Saturation"].set_title("Saturation modification")
+          self.windows["Saturation"].traitement = traitement.saturation
+          self.windows["Saturation"].components["button_applyChanges"].target = events.saturation
+          
+          self.windows["Luminosity"] = RC_window(self.panels["Img displayer"])
+          self.windows["Luminosity"].set_title("Luminosity modification")
+          self.windows["Luminosity"].traitement = traitement.luminosity
+          self.windows["Luminosity"].components["button_applyChanges"].target = events.luminosity
+          
+          self.windows["Rotation"] = RC_window(self.panels["Img displayer"])
+          self.windows["Rotation"].set_title("Rotate")
+          self.windows["Rotation"].traitement = traitement.rotation
+          self.windows["Rotation"].components["button_applyChanges"].target = events.rotation
+          self.windows["Rotation"].components["entry_value"].default_text = "Degree - °"
+          self.windows["Rotation"].components["entry_value"].extra_string = "°"
           
           self.panels["File list"] = Selector_list([0 , 20],[300 , 400])
           self.panels["File list"].color = [18, 12, 54]
@@ -46,7 +68,7 @@ class App():
           self.panels["settings bar"] = Settings_bar([0,0],[900 , 20])
           self.panels["settings bar"].texture.fill([242, 160, 73])
           
-          self.panels["settings bar"].components["button_addFile"] = Button("addFile",[0,0],[80 , 20],{"stringvalue":"open file","align center":True},self.windows["File manager"])
+          self.panels["settings bar"].components["button_addFile"] = Button("addFile",[0,0],[80 , 20],{"stringvalue":"open file","align center":True},{"window":self.windows["File manager"]})
           self.panels["settings bar"].components["button_addFile"].target = events.open_window
           
           #Tool panel components
@@ -59,63 +81,43 @@ class App():
           
           # main tools preparation
           main_tools = self.panels["Tool panel"].panels["main tools"]
-          main_tools.components["button_SymHori"] = Button("SymHori",[10, 5] , [150 , 40] , {"stringvalue":"Hor. sym","padding left":60,"color":[255 , 255 , 255]})
+          main_tools.components["button_SymHori"] = Button("SymHori",[10, 5] , [140 , 40] , {"stringvalue":"Hor. sym","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_SymHori"].target = events.sym_hori
           
-          main_tools.components["button_SymVert"] = Button("SymVert",[10,50] , [150 , 40] , {"stringvalue":"Vert. sym","padding left":60,"color":[255 , 255 , 255]})
+          main_tools.components["button_SymVert"] = Button("SymVert",[10,50] , [140 , 40] , {"stringvalue":"Vert. sym","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_SymVert"].target = events.sym_vert
-
-          main_tools.components["button_rot180"] = Button("rot180",[165,50] , [150 , 40] , {"stringvalue":"Rot. 180°","padding left":60,"color":[255 , 255 , 255]})
-          main_tools.components["button_rot180"].target = events.rot_180
           
-          main_tools.components["button_rot90"] = Button("rot90",[165,5] , [150 , 40] , {"stringvalue":"Rot. 90°","padding left":60,"color":[255 , 255 , 255]})
-          main_tools.components["button_rot90"].target = events.rot_90
-          
-          main_tools.components["button_convPGM"] = Button("convPGM",[165,95] , [150 , 40] , {"stringvalue":"To PGM","padding left":60,"color":[255 , 255 , 255]})
+          main_tools.components["button_convPGM"] = Button("convPGM",[155,5] , [140 , 40] , {"stringvalue":"To PGM","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_convPGM"].target = events.pgm_conv
           
-          main_tools.components["button_convPBM"] = Button("convPBM",[350,95] , [150 , 40] , {"stringvalue":"To PBM :","padding left":60,"color":[255 , 255 , 255]})
-          main_tools.components["button_convPBM"].target = events.pbm_conv  
+          main_tools.components["button_convPBM"] = Button("convPBM",[155,50] , [140 , 40] , {"stringvalue":"To PBM","padding left":60,"color":[255 , 255 , 255]},self.windows["PBM conversion"])
+          main_tools.components["button_convPBM"].target = events.open_window 
           
-          main_tools.components["entry_intConvPBM"] =  Entry("entry_intConvPBM", [505 , 95] , [75 , 40] , [255 , 255 , 255])
-          main_tools.components["entry_intConvPBM"].default_text = "Int - %"   
-          main_tools.components["entry_intConvPBM"].max_lenght = 3
-          main_tools.components["entry_intConvPBM"].extra_string = "%" 
+          main_tools.components["button_brightness"] = Button("brightness",[300,5] , [140 , 40] , {"stringvalue":"brightness","padding left":60,"color":[255 , 255 , 255]},{"window":self.windows["Luminosity"]})
+          main_tools.components["button_brightness"].target = events.open_window
           
-          main_tools.components["button_brightness"] = Button("brightness",[350,5] , [150 , 40] , {"stringvalue":"brightness :","padding left":60,"color":[255 , 255 , 255]})
-          main_tools.components["button_brightness"].target = events.luminosity
+          main_tools.components["button_saturation"] = Button("saturation",[300,50] , [140 , 40] , {"stringvalue":"saturation","padding left":60,"color":[255 , 255 , 255]},{"window":self.windows["Saturation"]})
+          main_tools.components["button_saturation"].target = events.open_window
           
-          main_tools.components["entry_luminance"] =  Entry("entry_luminance", [505 , 5] , [75 , 40] , [255 , 255 , 255])
-          main_tools.components["entry_luminance"].default_text = "Lum - %"   
-          main_tools.components["entry_luminance"].max_lenght = 3
-          main_tools.components["entry_luminance"].extra_string = "%" 
+          main_tools.components["button_rotation"] = Button("rotation",[445,5] , [140 , 40] , {"stringvalue":"rotate","padding left":60,"color":[255 , 255 , 255]},{"window":self.windows["Rotation"]})
+          main_tools.components["button_rotation"].target = events.open_window
           
-          main_tools.components["button_saturation"] = Button("saturation",[350,50] , [150 , 40] , {"stringvalue":"saturate :","padding left":60,"color":[255 , 255 , 255]})
-          main_tools.components["button_saturation"].target = events.saturation
+          main_tools.components["button_rot180"] = Button("rot180",[445,50] , [140 , 40] , {"stringvalue":"Rot. 180°","padding left":60,"color":[255 , 255 , 255]})
+          main_tools.components["button_rot180"].target = events.rot_180
           
-          main_tools.components["entry_saturation"] =  Entry("entry_saturation", [505 , 50] , [75 , 40] , [255 , 255 , 255])
-          main_tools.components["entry_saturation"].default_text = "sat - %"   
-          main_tools.components["entry_saturation"].max_lenght = 3
-          main_tools.components["entry_saturation"].extra_string = "%" 
+          main_tools.components["button_rot90"] = Button("rot90",[445,95] , [140 , 40] , {"stringvalue":"Rot. 90°","padding left":60,"color":[255 , 255 , 255]})
+          main_tools.components["button_rot90"].target = events.rot_90
           
-          main_tools.components["button_rotation"] = Button("rotation",[610,5] , [150 , 40] , {"stringvalue":"rotate :","padding left":60,"color":[255 , 255 , 255]})
-          main_tools.components["button_rotation"].target = events.rotation
-          
-          main_tools.components["entry_rotation"] =  Entry("entry_rotation", [765 , 5] , [75 , 40] , [255 , 255 , 255])
-          main_tools.components["entry_rotation"].default_text = "rot - °"   
-          main_tools.components["entry_rotation"].max_lenght = 3
-          main_tools.components["entry_rotation"].extra_string = "°" 
-          
-          main_tools.components["button_resize"] = Button("resize",[610,50] , [150 , 40] , {"stringvalue":"resize :","padding left":60,"color":[255 , 255 , 255]})
+          main_tools.components["button_resize"] = Button("resize",[590,5] , [140 , 40] , {"stringvalue":"resize :","padding left":60,"color":[255 , 255 , 255]})
           main_tools.components["button_resize"].target = events.resize_image
           
-          main_tools.components["entry_xSize"] =  Entry("entry_xSize", [765 , 50] , [75 , 40] , [255 , 255 , 255])
-          main_tools.components["entry_xSize"].default_text = "X - pixel"   
+          main_tools.components["entry_xSize"] =  Entry("entry_xSize", [735 , 5] , [60 , 40] , [255 , 255 , 255])
+          main_tools.components["entry_xSize"].default_text = "X pix"   
           main_tools.components["entry_xSize"].max_lenght = 4
           main_tools.components["entry_xSize"].extra_string = "px" 
           
-          main_tools.components["entry_ySize"] =  Entry("entry_ySize", [765 , 95] , [75 , 40] , [255 , 255 , 255])
-          main_tools.components["entry_ySize"].default_text = "Y - pixel"   
+          main_tools.components["entry_ySize"] =  Entry("entry_ySize", [800 , 5] , [60 , 40] , [255 , 255 , 255])
+          main_tools.components["entry_ySize"].default_text = "Y pix"   
           main_tools.components["entry_ySize"].max_lenght = 4
           main_tools.components["entry_ySize"].extra_string = "px" 
      
@@ -147,6 +149,10 @@ class App():
                if event.type == QUIT:
                     pygame.quit()
                     sys.exit(0)
+               elif event.type == Window.WINDOW_CLOSED:
+                    event.window.opened = False
+                    self.is_window_open = False
+                    self.current_window = None
                     
                if(not self.is_window_open):
                     for panel in self.panels.values():

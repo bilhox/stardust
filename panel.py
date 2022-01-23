@@ -15,19 +15,16 @@ class SList():
           
           self.color = [0,0,0]
           
-          # self.scrollbar_1 = scrollbar.Scrollbar(self , True)
           self.scrollbar = scrollbar.Scrollbar(self , scrollbar_side)
           
           self.true_surface = pygame.Surface(self.rect.size)
      
      def update(self):
           
-          # self.scrollbar_1.update()
           self.scrollbar.update()
           
      def event_handler(self , event , zone_offset=[0,0]):
           
-          # self.scrollbar_1.event_handler(event)
           self.scrollbar.event_handler(event , [zone_offset[0],zone_offset[1]])
      
      def display(self , surface):
@@ -37,7 +34,6 @@ class SList():
           
           final_surface.blit(self.true_surface , [0 , self.scrollbar.ts_diff]) if not self.scrollbar.side else final_surface.blit(self.true_surface , [self.scrollbar.ts_diff , 0])
           
-          # self.scrollbar_1.draw(final_surface)
           self.scrollbar.display(final_surface)
           
           surface.blit(final_surface , [self.rect.x , self.rect.y])

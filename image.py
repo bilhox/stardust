@@ -79,7 +79,7 @@ class Image():
           
           if save:
                self.image_data_backup.append(deepcopy(self.image_data))
-               if len(self.image_data_backup) == 10:
+               if len(self.image_data_backup) == 20:
                     self.image_data_backup.pop(0)
           
           self.image_data = deepcopy(image_data)
@@ -257,8 +257,6 @@ class Img_displayer():
      def resize(self):
           
           final_zoom = 3
-          
-          
           
           if max(self.image.rect.size) == self.image.rect.width:
                

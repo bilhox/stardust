@@ -131,7 +131,7 @@ class Entry:
 
 class Button():
      
-     def __init__(self , name : str , pos : tuple , size : tuple , stringParameter : dict , target_arguments=None):
+     def __init__(self , name : str , pos : tuple , size : tuple , stringParameter : dict , target_arguments={}):
           
           self.rect = Rect(pos , size)
           self.textures = [pygame.Surface(self.rect.size , SRCALPHA),pygame.Surface(self.rect.size , SRCALPHA),pygame.Surface(self.rect.size , SRCALPHA)]
@@ -206,7 +206,7 @@ class Button():
           if event.type == MOUSEBUTTONDOWN and event.button == 1:
                if self.rect.x + button_zone_offset[0] < event.pos[0] < self.rect.right + button_zone_offset[0] and self.rect.y + button_zone_offset[1] < event.pos[1] < self.rect.bottom + button_zone_offset[1]:
                     if self.target_arguments != None and self.target != None:
-                         self.target(self.target_arguments)
+                         self.target(**self.target_arguments) if isinstance(self.target_arguments , dict) else self.target(self.target_arguments)
                     elif self.target != None:
                          self.target()
                     self.case = 2
