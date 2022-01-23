@@ -6,7 +6,7 @@
 
 This program was made with the 3.10 version of python and the 2.1 version of pygame module .
 If the program don't execute , be sure the good module versions are installed .
-This program use also other modules which can be downloaded by running the bat file : "module_installation".
+\nThis program use also other modules which can be downloaded by running the bat file : "module_installation".
 The project is subject to the license "Creative Commons Zero" .
 This project was made by Théo , Leila , Bilel and Valentin , students in the high school.
 
