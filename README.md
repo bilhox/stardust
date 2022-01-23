@@ -3,7 +3,7 @@ Si le programme ne s'exécute pas , veuillez essayez d'installer les bonnes vers
 Le programme nécessite aussi l'installation du module pyperclip pour l'accès au presse-papier .
 Un fichier avec des lignes de commandes est à votre disposition pour installer les différents modules .
 
-**Fichier lisible:**
+**Fichiers lisibles:**
 
 - ppm (portable pixmap)
 - pbm (portable bitmap)
